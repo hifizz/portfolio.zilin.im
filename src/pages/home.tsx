@@ -18,6 +18,7 @@ function SectionTitle({ id, children }: { id?: string; children: React.ReactNode
 function ProductCard({ p, large }: { p: Project; large?: boolean }) {
   return (
     <article
+      data-testid={`product-card-${p.slug}`}
       className={cn(
         'group relative flex flex-col gap-3 rounded-lg border bg-card p-3 transition-colors hover:border-foreground/20',
         large && 'sm:col-span-2',
@@ -46,7 +47,7 @@ function ProductCard({ p, large }: { p: Project; large?: boolean }) {
 function OssRow({ p }: { p: Project }) {
   const href = primaryHref(p)
   return (
-    <li>
+    <li data-testid={`list-row-${p.slug}`}>
       <ExternalLink
         href={href}
         className="group grid grid-cols-[8.5rem_1fr_auto] items-baseline gap-x-4 gap-y-0.5 py-2.5 text-sm sm:grid-cols-[10rem_6rem_1fr_auto]"
@@ -78,13 +79,13 @@ export function Home() {
 
   return (
     <div className="flex flex-col gap-14 pt-10 sm:pt-16">
-      <section className="max-w-2xl">
+      <section data-testid="home-hero" className="max-w-2xl">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{profile.role}</p>
         <p className="mt-4 text-lg text-muted-foreground">{profile.intro}</p>
       </section>
 
-      <section>
+      <section data-testid="home-featured">
         <SectionTitle id="work">精选</SectionTitle>
         <div className="grid gap-4 sm:grid-cols-3">
           {featured.map((p, i) => (
@@ -94,7 +95,7 @@ export function Home() {
       </section>
 
       {products.length > 0 && (
-        <section>
+        <section data-testid="home-products">
           <SectionTitle>产品</SectionTitle>
           <div className="grid gap-4 sm:grid-cols-3">
             {products.map((p) => (
@@ -104,7 +105,7 @@ export function Home() {
         </section>
       )}
 
-      <section>
+      <section data-testid="home-oss">
         <SectionTitle>开源 & 实验</SectionTitle>
         <ul className="divide-y border-y">
           {oss.map((p) => (
@@ -113,7 +114,7 @@ export function Home() {
         </ul>
       </section>
 
-      <section>
+      <section data-testid="home-skills">
         <SectionTitle>Skills</SectionTitle>
         <ul className="divide-y border-y">
           {skills.map((p) => (
@@ -122,7 +123,7 @@ export function Home() {
         </ul>
       </section>
 
-      <section>
+      <section data-testid="home-writing">
         <div className="flex items-baseline justify-between">
           <SectionTitle id="writing">文章</SectionTitle>
           <ExternalLink href={profile.blog} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground">

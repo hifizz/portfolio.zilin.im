@@ -3,14 +3,15 @@ import { Play, VideoOff } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
-type Props = { src?: string; poster?: string; title: string; autoPlay?: boolean; className?: string }
+type Props = { src?: string; poster?: string; title: string; autoPlay?: boolean; className?: string; 'data-testid'?: string }
 
 /** 主介绍视频。文件缺失或加载失败时显示占位，不报错。 */
-export function VideoPlayer({ src, poster, title, autoPlay, className }: Props) {
+export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-testid': testId }: Props) {
   const [failed, setFailed] = useState(false)
   if (!src || failed) {
     return (
       <div
+        data-testid={testId}
         className={cn(
           'flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed bg-muted/40 text-sm text-muted-foreground',
           className,
@@ -24,6 +25,7 @@ export function VideoPlayer({ src, poster, title, autoPlay, className }: Props) 
   return (
     <video
       key={src}
+      data-testid={testId}
       src={src}
       poster={poster}
       controls
@@ -38,13 +40,14 @@ export function VideoPlayer({ src, poster, title, autoPlay, className }: Props) 
 }
 
 /** 封面 + 播放按钮，点击弹窗播放。 */
-export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoPlay'>) {
+export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoPlay' | 'data-testid'>) {
   const [open, setOpen] = useState(false)
   const [posterOk, setPosterOk] = useState(true)
   return (
     <>
       <button
         type="button"
+        data-testid="video-thumb"
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
@@ -72,7 +75,7 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
         </span>
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl p-2 sm:max-w-4xl">
+        <DialogContent data-testid="video-dialog" className="max-w-4xl p-2 sm:max-w-4xl">
           <DialogTitle className="sr-only">{title} 介绍视频</DialogTitle>
           {open && <VideoPlayer src={src} poster={poster} title={title} autoPlay />}
         </DialogContent>

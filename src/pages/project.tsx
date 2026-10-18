@@ -8,9 +8,9 @@ import { posterUrl, projects, videoUrl } from '@/content/projects'
 
 const products = projects.filter((p) => p.kind === 'product')
 
-function Block({ title, items }: { title: string; items: string[] }) {
+function Block({ id, title, items }: { id: string; title: string; items: string[] }) {
   return (
-    <section>
+    <section data-testid={id}>
       <h2 className="mb-3 text-sm font-medium">{title}</h2>
       <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground marker:text-border">
         {items.map((t) => (
@@ -30,12 +30,12 @@ export function ProjectPage() {
   const d = p.detail
 
   return (
-    <article className="pt-6">
+    <article data-testid="project-page" className="pt-6">
       <Link to="/#work" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" aria-hidden /> 返回作品
       </Link>
 
-      <header className="mt-6 flex flex-wrap items-end justify-between gap-4">
+      <header data-testid="project-header" className="mt-6 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-semibold tracking-tight">{p.name}</h1>
@@ -54,18 +54,18 @@ export function ProjectPage() {
         </div>
       </header>
 
-      <VideoPlayer src={videoUrl(p)} poster={posterUrl(p)} title={p.name} className="mt-8" />
+      <VideoPlayer src={videoUrl(p)} poster={posterUrl(p)} title={p.name} className="mt-8" data-testid="project-video" />
 
       <div className="mt-10 grid gap-10 md:grid-cols-[1fr_15rem]">
         <div className="flex flex-col gap-8">
-          <section>
+          <section data-testid="project-problem">
             <h2 className="mb-3 text-sm font-medium">解决什么问题</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">{d.problem}</p>
           </section>
-          <Block title="核心功能" items={d.features} />
-          <Block title="关键技术" items={d.highlights} />
+          <Block id="project-features" title="核心功能" items={d.features} />
+          <Block id="project-highlights" title="关键技术" items={d.highlights} />
         </div>
-        <aside className="flex h-fit flex-col gap-5 text-sm md:sticky md:top-6">
+        <aside data-testid="project-meta" className="flex h-fit flex-col gap-5 text-sm md:sticky md:top-6">
           <div>
             <div className="mb-1 text-xs text-muted-foreground">角色</div>
             {d.role}
@@ -89,6 +89,7 @@ export function ProjectPage() {
 
       {next !== p && (
         <Link
+          data-testid="project-next"
           to={`/projects/${next.slug}`}
           className="mt-16 flex items-center justify-between border-t pt-6 text-sm text-muted-foreground hover:text-foreground"
         >
