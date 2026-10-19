@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { Play, VideoOff } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -13,7 +14,7 @@ export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-tes
       <div
         data-testid={testId}
         className={cn(
-          'flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed bg-muted/40 text-sm text-muted-foreground',
+          'placeholder-pattern flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg border text-sm text-muted-foreground',
           className,
         )}
       >
@@ -55,10 +56,18 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
         }}
         aria-label={`播放 ${title} 介绍视频`}
         className={cn(
-          'group/thumb relative block aspect-video w-full overflow-hidden rounded-md border bg-gradient-to-br from-muted to-muted/30',
+          'placeholder-pattern group/thumb @container relative block aspect-video w-full overflow-hidden rounded-md border transition-colors',
           className,
         )}
       >
+        {/* 无封面时用项目名做淡水印（伪元素渲染，不进入 DOM 文本） */}
+        {!(poster && posterOk) && (
+          <span
+            aria-hidden
+            data-watermark={title}
+            className="absolute bottom-2 left-3 text-[9cqw] leading-none font-semibold tracking-tight whitespace-nowrap text-foreground/[0.07] before:content-[attr(data-watermark)]"
+          />
+        )}
         {poster && posterOk && (
           <img
             src={poster}
@@ -77,7 +86,11 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent data-testid="video-dialog" className="max-w-4xl p-2 sm:max-w-4xl">
           <DialogTitle className="sr-only">{title} 介绍视频</DialogTitle>
-          {open && <VideoPlayer src={src} poster={poster} title={title} autoPlay />}
+          {open && (
+            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2, ease: 'easeOut' }}>
+              <VideoPlayer src={src} poster={poster} title={title} autoPlay />
+            </motion.div>
+          )}
         </DialogContent>
       </Dialog>
     </>

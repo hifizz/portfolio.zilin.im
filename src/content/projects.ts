@@ -13,6 +13,8 @@ export type Project = {
   /** 形态标签，例如「浏览器插件」「Web 应用」 */
   form?: string
   status?: string
+  /** 状态圆点颜色：live 绿 / beta 琥珀；不填则无圆点 */
+  statusTone?: 'live' | 'beta'
   featured?: boolean
   tags: string[]
   links: ProjectLink[]
@@ -37,6 +39,7 @@ export const projects: Project[] = [
     kind: 'product',
     featured: true,
     status: 'Beta 内测中',
+    statusTone: 'beta',
     form: 'Web 应用',
     tagline: '能分叉聊天的 AI 应用，用树状对话解决研究型、探索性、决策型复杂问题。',
     tags: ['Agent', 'AI 交互', '工具调用', '上下文压缩', '记忆', '评测'],
@@ -70,8 +73,8 @@ export const projects: Project[] = [
     slug: 'pi-cloud-agents',
     name: 'Pi-cloud-agents',
     kind: 'product',
-    featured: true,
     status: '已上线（白名单）',
+    statusTone: 'live',
     form: 'Web 应用 · 开源',
     tagline: '对标 Cursor Cloud Agents 的自托管云端编码 Agent：在云端沙箱里改代码、跑测试、开 PR。',
     tags: ['Coding Agent', '沙箱', 'Durable Execution', '人工审批'],
@@ -103,7 +106,9 @@ export const projects: Project[] = [
     slug: 'chatkeep',
     name: 'chatkeep',
     kind: 'product',
+    featured: true,
     status: '已上线',
+    statusTone: 'live',
     form: '浏览器插件',
     tagline: '大模型网页聊天的 toolkit：自动保存聊天记录，几乎无损地转成 Markdown。',
     tags: ['Markdown', '知识管理'],
@@ -153,11 +158,21 @@ export const projects: Project[] = [
   {
     slug: 'tars',
     name: 'Tars',
-    kind: 'oss',
-    form: 'Personal Agent',
+    kind: 'product',
+    form: 'Personal Agent · 开源',
     tagline: '基于 Pi Durable 的 Personal Agent，拥有自己的电脑；一个晚上搭好 Demo。',
-    tags: ['Agent'],
+    tags: ['Agent', 'Durable Execution'],
     links: [{ label: 'GitHub', href: 'https://github.com/hifizz/tars' }],
+    video: 'tars.mp4',
+    poster: 'tars.jpg',
+    detail: {
+      problem:
+        '和 Grok Bots、Codex Dots 一样，让 Agent 拥有自己的电脑，成为长期在线的个人助理。',
+      features: ['TODO: 补充主要功能'],
+      highlights: ['基于 Pi Durable 构建', '一个晚上搭建好 Demo', 'TODO: 补充技术难点'],
+      role: '个人独立开发',
+      stack: ['Pi Durable', 'TODO'],
+    },
   },
   {
     slug: 'sayit-service',

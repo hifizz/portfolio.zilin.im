@@ -1,10 +1,16 @@
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
+import { motion } from 'motion/react'
 import { Link, Navigate, useParams } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
+import { GithubIcon } from '@/components/github-icon'
+import { StatusBadge } from '@/components/status-badge'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { VideoPlayer } from '@/components/video'
 import { posterUrl, projects, videoUrl } from '@/content/projects'
+import { cn } from '@/lib/utils'
+
+const metaLabel = 'mb-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground'
 
 const products = projects.filter((p) => p.kind === 'product')
 
@@ -30,7 +36,13 @@ export function ProjectPage() {
   const d = p.detail
 
   return (
-    <article data-testid="project-page" className="pt-6">
+    <motion.article
+      data-testid="project-page"
+      className="pt-6"
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <Link to="/#work" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" aria-hidden /> 返回作品
       </Link>
@@ -39,7 +51,7 @@ export function ProjectPage() {
         <div className="max-w-2xl">
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-semibold tracking-tight">{p.name}</h1>
-            {p.status && <Badge variant="secondary" className="font-normal">{p.status}</Badge>}
+            <StatusBadge p={p} />
           </div>
           <p className="mt-2 text-muted-foreground">{p.tagline}</p>
         </div>
@@ -47,6 +59,7 @@ export function ProjectPage() {
           {p.links.map((l) => (
             <Button key={l.href} variant="outline" size="sm" asChild>
               <ExternalLink href={l.href}>
+                {l.href.includes('github.com') && <GithubIcon />}
                 {l.label} <ArrowUpRight aria-hidden />
               </ExternalLink>
             </Button>
@@ -67,17 +80,17 @@ export function ProjectPage() {
         </div>
         <aside data-testid="project-meta" className="flex h-fit flex-col gap-5 text-sm md:sticky md:top-6">
           <div>
-            <div className="mb-1 text-xs text-muted-foreground">角色</div>
+            <div className={metaLabel}>角色</div>
             {d.role}
           </div>
           {p.form && (
             <div>
-              <div className="mb-1 text-xs text-muted-foreground">形态</div>
+              <div className={metaLabel}>形态</div>
               {p.form}
             </div>
           )}
           <div>
-            <div className="mb-2 text-xs text-muted-foreground">技术栈</div>
+            <div className={cn(metaLabel, 'mb-2')}>技术栈</div>
             <div className="flex flex-wrap gap-1.5">
               {d.stack.map((s) => (
                 <Badge key={s} variant="outline" className="font-normal">{s}</Badge>
@@ -99,6 +112,6 @@ export function ProjectPage() {
           </span>
         </Link>
       )}
-    </article>
+    </motion.article>
   )
 }

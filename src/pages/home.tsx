@@ -1,29 +1,52 @@
-import { useEffect } from 'react'
+import { createElement, useEffect, useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ArrowUpRight, Bot, Box, FlaskConical, Package, Puzzle, Server, Sparkles, type LucideIcon } from 'lucide-react'
+import { motion } from 'motion/react'
 import { Link, useLocation } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
-import { ArrowUpRight } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/status-badge'
 import { VideoThumb } from '@/components/video'
 import { articles, posterUrl, primaryHref, profile, projects, videoUrl, type Project } from '@/content/projects'
-import { cn } from '@/lib/utils'
+
+gsap.registerPlugin(useGSAP, ScrollTrigger)
+
+const formIcons: Record<string, LucideIcon> = {
+  浏览器插件: Puzzle,
+  'CSS 库': Package,
+  'JS 库': Package,
+  'Skills 库': Package,
+  服务端: Server,
+  'Personal Agent': Bot,
+  实验场: FlaskConical,
+  Skill: Sparkles,
+}
+
+const formIcon = (form?: string) => (form && formIcons[form]) || Box
 
 function SectionTitle({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="mb-4 scroll-mt-20 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+    <h2 id={id} className="mb-4 scroll-mt-20 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
       {children}
     </h2>
   )
 }
 
-function ProductCard({ p, large }: { p: Project; large?: boolean }) {
+function ProductCard({ p }: { p: Project }) {
   return (
-    <article
+    <motion.article
       data-testid={`product-card-${p.slug}`}
-      className={cn(
-        'group relative flex flex-col gap-3 rounded-lg border bg-card p-3 transition-colors hover:border-foreground/20',
-        large && 'sm:col-span-2',
-      )}
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      onPointerMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`)
+        e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`)
+      }}
+      className="group relative flex flex-col gap-3 rounded-lg border bg-card p-3 transition-colors hover:border-foreground/25"
     >
+      <div aria-hidden className="card-spotlight pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity group-hover:opacity-100" />
       <VideoThumb src={videoUrl(p)} poster={posterUrl(p)} title={p.name} />
       <div className="flex flex-1 flex-col gap-1.5 px-1 pb-1">
         <div className="flex items-center gap-2">
@@ -33,14 +56,14 @@ function ProductCard({ p, large }: { p: Project; large?: boolean }) {
               {p.name}
             </Link>
           </h3>
-          {p.status && <Badge variant="secondary" className="font-normal">{p.status}</Badge>}
+          <StatusBadge p={p} />
         </div>
         <p className="text-sm text-muted-foreground">{p.tagline}</p>
-        <p className="mt-auto pt-1 text-xs text-muted-foreground/80">
-          {[p.form, ...p.tags.slice(0, large ? 5 : 3)].filter(Boolean).join(' · ')}
+        <p className="mt-auto pt-1 font-mono text-[11px] text-muted-foreground">
+          {[p.form, ...p.tags.slice(0, 4)].filter(Boolean).join(' · ')}
         </p>
       </div>
-    </article>
+    </motion.article>
   )
 }
 
@@ -50,16 +73,19 @@ function OssRow({ p }: { p: Project }) {
     <li data-testid={`list-row-${p.slug}`}>
       <ExternalLink
         href={href}
-        className="group grid grid-cols-[8.5rem_1fr_auto] items-baseline gap-x-4 gap-y-0.5 py-2.5 text-sm sm:grid-cols-[10rem_6rem_1fr_auto]"
+        className="group grid grid-cols-[10.5rem_1fr_auto] items-baseline gap-x-4 gap-y-0.5 py-2.5 text-sm sm:grid-cols-[12rem_6.5rem_1fr_auto]"
       >
-        <span className="font-medium group-hover:underline group-hover:underline-offset-4">{p.name}</span>
-        <span className="hidden text-xs text-muted-foreground sm:block">{p.form}</span>
+        <span className="flex items-center gap-2 font-medium">
+          {createElement(formIcon(p.form), { className: 'size-3.5 shrink-0 self-center text-muted-foreground', 'aria-hidden': true })}
+          <span className="group-hover:underline group-hover:underline-offset-4">{p.name}</span>
+        </span>
+        <span className="hidden font-mono text-[11px] text-muted-foreground sm:block">{p.form}</span>
         <span className="text-muted-foreground max-sm:col-span-2 max-sm:col-start-1 max-sm:row-start-2">
           {p.tagline}
         </span>
         <span className="flex items-center gap-0.5 text-xs text-muted-foreground group-hover:text-foreground max-sm:col-start-3 max-sm:row-start-1">
           {p.links[0]?.label}
-          <ArrowUpRight className="size-3.5" aria-hidden />
+          <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden />
         </span>
       </ExternalLink>
     </li>
@@ -68,9 +94,26 @@ function OssRow({ p }: { p: Project }) {
 
 export function Home() {
   const { hash } = useLocation()
+  const root = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
   }, [hash])
+
+  // 入场动画：用 gsap.from，JS 未执行时内容保持可见；减少动态偏好下不做动画
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        const reveal = { opacity: 0, y: 12, duration: 0.5, ease: 'power2.out', clearProps: 'opacity,transform' }
+        gsap.from('[data-testid="home-hero"] > *', { ...reveal, stagger: 0.06 })
+        gsap.utils.toArray<HTMLElement>('section:not([data-testid="home-hero"])').forEach((el) => {
+          gsap.from(el, { ...reveal, scrollTrigger: { trigger: el, start: 'top 85%', once: true } })
+        })
+      })
+      return () => mm.revert()
+    },
+    { scope: root },
+  )
 
   const featured = projects.filter((p) => p.kind === 'product' && p.featured)
   const products = projects.filter((p) => p.kind === 'product' && !p.featured)
@@ -78,7 +121,7 @@ export function Home() {
   const skills = projects.filter((p) => p.kind === 'skill')
 
   return (
-    <div className="flex flex-col gap-14 pt-10 sm:pt-16">
+    <div ref={root} className="flex flex-col gap-14 pt-10 sm:pt-16">
       <section data-testid="home-hero" className="max-w-2xl">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{profile.role}</p>
@@ -87,9 +130,9 @@ export function Home() {
 
       <section data-testid="home-featured">
         <SectionTitle id="work">精选</SectionTitle>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {featured.map((p, i) => (
-            <ProductCard key={p.slug} p={p} large={i === 0} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          {featured.map((p) => (
+            <ProductCard key={p.slug} p={p} />
           ))}
         </div>
       </section>
@@ -97,7 +140,7 @@ export function Home() {
       {products.length > 0 && (
         <section data-testid="home-products">
           <SectionTitle>产品</SectionTitle>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             {products.map((p) => (
               <ProductCard key={p.slug} p={p} />
             ))}
