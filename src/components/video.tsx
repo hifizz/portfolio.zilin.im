@@ -9,17 +9,34 @@ type Props = { src?: string; poster?: string; title: string; autoPlay?: boolean;
 /** 主介绍视频。文件缺失或加载失败时显示占位，不报错。 */
 export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-testid': testId }: Props) {
   const [failed, setFailed] = useState(false)
+  const [posterOk, setPosterOk] = useState(true)
   if (!src || failed) {
+    const showPoster = poster && posterOk
     return (
       <div
         data-testid={testId}
         className={cn(
-          'placeholder-pattern flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg border text-sm text-muted-foreground',
+          'placeholder-pattern relative flex aspect-video w-full flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border bg-muted text-sm text-muted-foreground',
           className,
         )}
       >
-        <VideoOff className="size-5" aria-hidden />
-        介绍视频准备中
+        {showPoster && (
+          <img
+            src={poster}
+            alt={`${title} 封面`}
+            onError={() => setPosterOk(false)}
+            className="absolute inset-0 size-full object-contain"
+          />
+        )}
+        <span
+          className={cn(
+            'relative flex items-center gap-2',
+            showPoster && 'rounded-full bg-background/90 px-3 py-1.5 text-foreground shadow-sm ring-1 ring-border',
+          )}
+        >
+          <VideoOff className="size-4" aria-hidden />
+          介绍视频准备中
+        </span>
       </div>
     )
   }

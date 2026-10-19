@@ -45,10 +45,10 @@ export const projects: Project[] = [
     tags: ['Agent', 'AI 交互', '工具调用', '上下文压缩', '记忆', '评测'],
     links: [
       { label: '官网', href: 'https://thread.zilin.im/' },
-      // TODO: 文章《为什么要开发 ThreadChat？》上线后补链接
+      // TODO: 文章《为什么要开发 ThreadChat？》上线后补链接，并恢复下方 articles 条目
     ],
     video: 'threadchat.mp4',
-    poster: 'threadchat.jpg',
+    poster: 'thread-chat.jpg',
     detail: {
       problem:
         '线性对话难以承载调研、决策、方案设计这类需要多方向追问的复杂问题。ThreadChat 让对话变成一棵树：可以理解为 ChatGPT / Claude Project 功能的升级版，致力于探索下一代 AI 交互形态。',
@@ -114,7 +114,7 @@ export const projects: Project[] = [
     tags: ['Markdown', '知识管理'],
     links: [{ label: '官网', href: 'https://chatkeep.dev/' }],
     video: 'chatkeep.mp4',
-    poster: 'chatkeep.jpg',
+    poster: 'chatkeep-dev.jpg',
     detail: {
       problem: '网页版大模型聊天的内容难以留存和复用，导出格式也常常失真。',
       features: [
@@ -131,11 +131,24 @@ export const projects: Project[] = [
   {
     slug: 'readsight',
     name: 'Readsight',
-    kind: 'oss',
+    kind: 'product',
     form: '浏览器插件',
     tagline: '英文精读阅读伙伴：查询、侧边聊天、沉浸式翻译。',
     tags: ['阅读', '翻译'],
     links: [{ label: 'GitHub', href: 'https://github.com/hifizz/readsight' }],
+    poster: 'readsight.jpg',
+    detail: {
+      problem: '英文精读时，生词、长难句和语境解释需要频繁切换词典与翻译工具，打断阅读节奏。',
+      features: [
+        '划词查询：释义、音标、用法搭配，并标注 CET6 / TOEFL 等词频',
+        '结合本句继续：词义、本句译法、用法一键切换',
+        '侧边栏深聊：围绕当前页面与选中内容直接追问',
+        '沉浸式翻译',
+      ],
+      highlights: ['TODO: 补充上下文理解与翻译实现等技术难点'],
+      role: '个人独立设计与开发',
+      stack: ['TODO'],
+    },
   },
   {
     slug: 'relata',
@@ -242,8 +255,8 @@ export const projects: Project[] = [
 export type Article = { title: string; href?: string; date?: string }
 
 export const articles: Article[] = [
-  // TODO: 补链接与日期
-  { title: '为什么要开发 ThreadChat？' },
+  // TODO: 补链接与日期；数组为空时首页文章区自动隐藏
+  // { title: '为什么要开发 ThreadChat？' },
 ]
 
 export const profile = {

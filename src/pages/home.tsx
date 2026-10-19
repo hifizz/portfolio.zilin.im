@@ -166,28 +166,30 @@ export function Home() {
         </ul>
       </section>
 
-      <section data-testid="home-writing">
-        <div className="flex items-baseline justify-between">
-          <SectionTitle id="writing">文章</SectionTitle>
-          <ExternalLink href={profile.blog} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground">
-            博客 zilin.im <ArrowUpRight className="size-3.5" aria-hidden />
-          </ExternalLink>
-        </div>
-        <ul className="divide-y border-y text-sm">
-          {articles.map((a) => (
-            <li key={a.title} className="flex items-baseline justify-between py-2.5">
-              {a.href ? (
-                <ExternalLink href={a.href} className="font-medium hover:underline hover:underline-offset-4">
-                  {a.title}
-                </ExternalLink>
-              ) : (
-                <span className="font-medium">{a.title}</span>
-              )}
-              <span className="text-xs text-muted-foreground">{a.date ?? '即将发布'}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {articles.length > 0 && (
+        <section data-testid="home-writing">
+          <div className="flex items-baseline justify-between">
+            <SectionTitle id="writing">文章</SectionTitle>
+            <ExternalLink href={profile.blog} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground">
+              博客 zilin.im <ArrowUpRight className="size-3.5" aria-hidden />
+            </ExternalLink>
+          </div>
+          <ul className="divide-y border-y text-sm">
+            {articles.map((a) => (
+              <li key={a.title} className="flex items-baseline justify-between py-2.5">
+                {a.href ? (
+                  <ExternalLink href={a.href} className="font-medium hover:underline hover:underline-offset-4">
+                    {a.title}
+                  </ExternalLink>
+                ) : (
+                  <span className="font-medium">{a.title}</span>
+                )}
+                <span className="text-xs text-muted-foreground">{a.date ?? '即将发布'}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   )
 }
