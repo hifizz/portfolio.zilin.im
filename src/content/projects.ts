@@ -177,7 +177,7 @@ export const projects: Project[] = [
     tags: ['Agent', 'Durable Execution'],
     links: [{ label: 'GitHub', href: 'https://github.com/hifizz/tars' }],
     video: 'tars.mp4',
-    poster: 'tars.jpg',
+    poster: 'tars.png',
     detail: {
       problem:
         '和 Grok Bots、Codex Dots 一样，让 Agent 拥有自己的电脑，成为长期在线的个人助理。',
