@@ -26,9 +26,8 @@ export type Project = {
   detail?: {
     problem: string
     features: string[]
-    highlights: string[]
-    role: string
-    stack: string[]
+    /** 适合谁（可选，没写就不显示） */
+    audience?: string
   }
 }
 
@@ -38,8 +37,8 @@ export const projects: Project[] = [
     name: 'ThreadChat',
     kind: 'product',
     featured: true,
-    status: 'Beta 内测中',
-    statusTone: 'beta',
+    status: '已上线（Beta 内测中）',
+    statusTone: 'live',
     form: 'Web 应用',
     tagline: '能分叉聊天的 AI 应用，用树状对话解决研究型、探索性、决策型复杂问题。',
     tags: ['Agent', 'AI 交互', '工具调用', '上下文压缩', '记忆', '评测'],
@@ -58,15 +57,6 @@ export const projects: Project[] = [
         '树状聊天组织复杂问题的调研、决策与方案设计',
         'Project 工具与 GitHub 接入',
       ],
-      highlights: [
-        '从 chatbot 演进到 Agent 形态',
-        '工具调用、搜索工具的质量与多服务商接入',
-        '上下文压缩与记忆',
-        '评测体系',
-        // TODO: 补充 1~2 个具体技术难点与取舍
-      ],
-      role: '个人独立设计与开发',
-      stack: ['TODO'],
     },
   },
   {
@@ -93,13 +83,6 @@ export const projects: Project[] = [
         '危险操作的人工审批',
         '白名单登录与密钥隔离',
       ],
-      highlights: [
-        '可插拔沙箱抽象，接入 Fly.io Sprites 与 E2B',
-        '基于 Pi Durable 实现崩溃、重启后任务自动恢复且不重复执行',
-        '方案与任务拆分由我负责，多个 AI Agent 并行开发，我审查、集成、验收并部署上线',
-      ],
-      role: '方案设计、任务拆分、审查集成与上线',
-      stack: ['Pi Durable', 'Fly.io Sprites', 'E2B', 'TODO'],
     },
   },
   {
@@ -123,9 +106,6 @@ export const projects: Project[] = [
         '高亮划选与笔记',
         'Claude 备份数据浏览',
       ],
-      highlights: ['TODO: 补充格式还原等技术难点'],
-      role: '个人独立设计与开发',
-      stack: ['TODO'],
     },
   },
   {
@@ -145,9 +125,6 @@ export const projects: Project[] = [
         '侧边栏深聊：围绕当前页面与选中内容直接追问',
         '沉浸式翻译',
       ],
-      highlights: ['TODO: 补充上下文理解与翻译实现等技术难点'],
-      role: '个人独立设计与开发',
-      stack: ['TODO'],
     },
   },
   {
@@ -182,9 +159,6 @@ export const projects: Project[] = [
       problem:
         '和 Grok Bots、Codex Dots 一样，让 Agent 拥有自己的电脑，成为长期在线的个人助理。',
       features: ['TODO: 补充主要功能'],
-      highlights: ['基于 Pi Durable 构建', '一个晚上搭建好 Demo', 'TODO: 补充技术难点'],
-      role: '个人独立开发',
-      stack: ['Pi Durable', 'TODO'],
     },
   },
   {

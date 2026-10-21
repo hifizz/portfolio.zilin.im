@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { Play, VideoOff } from 'lucide-react'
+import { VideoOff } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
@@ -57,7 +57,7 @@ export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-tes
   )
 }
 
-/** 封面 + 播放按钮，点击弹窗播放。 */
+/** 封面，点击弹窗播放。 */
 export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoPlay' | 'data-testid'>) {
   const [open, setOpen] = useState(false)
   const [posterOk, setPosterOk] = useState(true)
@@ -73,7 +73,7 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
         }}
         aria-label={`播放 ${title} 介绍视频`}
         className={cn(
-          'placeholder-pattern group/thumb @container relative block aspect-video w-full overflow-hidden rounded-md border transition-colors',
+          'placeholder-pattern @container relative block aspect-video w-full overflow-hidden rounded-md border transition-colors',
           className,
         )}
       >
@@ -94,11 +94,6 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
             className="absolute inset-0 size-full object-cover"
           />
         )}
-        <span className="absolute inset-0 flex items-center justify-center">
-          <span className="flex size-10 items-center justify-center rounded-full bg-background/90 shadow-sm ring-1 ring-border transition group-hover/thumb:scale-105">
-            <Play className="size-4 translate-x-px fill-current" aria-hidden />
-          </span>
-        </span>
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent data-testid="video-dialog" className="max-w-4xl p-2 sm:max-w-4xl">

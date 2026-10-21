@@ -59,9 +59,6 @@ function ProductCard({ p }: { p: Project }) {
           <StatusBadge p={p} />
         </div>
         <p className="text-sm text-muted-foreground">{p.tagline}</p>
-        <p className="mt-auto pt-1 font-mono text-[11px] text-muted-foreground">
-          {[p.form, ...p.tags.slice(0, 4)].filter(Boolean).join(' · ')}
-        </p>
       </div>
     </motion.article>
   )
@@ -122,7 +119,7 @@ export function Home() {
 
   return (
     <div ref={root} className="flex flex-col gap-14 pt-10 sm:pt-16">
-      <section data-testid="home-hero" className="max-w-2xl">
+      <section data-testid="home-hero" className="mx-auto max-w-2xl text-center">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{profile.role}</p>
         <p className="mt-4 text-lg text-muted-foreground">{profile.intro}</p>

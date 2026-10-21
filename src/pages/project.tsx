@@ -8,9 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { VideoPlayer } from '@/components/video'
 import { posterUrl, projects, videoUrl } from '@/content/projects'
-import { cn } from '@/lib/utils'
-
-const metaLabel = 'mb-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground'
 
 const products = projects.filter((p) => p.kind === 'product')
 
@@ -34,6 +31,8 @@ export function ProjectPage() {
   if (!p?.detail) return <Navigate to="/" replace />
   const next = products[(idx + 1) % products.length]
   const d = p.detail
+  const [cta, ...rest] = p.links
+  const labels = [p.form, ...p.tags].filter((t): t is string => !!t)
 
   return (
     <motion.article
@@ -47,17 +46,43 @@ export function ProjectPage() {
         <ArrowLeft className="size-3.5" aria-hidden /> 返回作品
       </Link>
 
-      <header data-testid="project-header" className="mt-6 flex flex-wrap items-end justify-between gap-4">
+      <header data-testid="project-header" className="mt-6">
         <div className="max-w-2xl">
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-semibold tracking-tight">{p.name}</h1>
             <StatusBadge p={p} />
           </div>
           <p className="mt-2 text-muted-foreground">{p.tagline}</p>
+          {labels.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {labels.map((t) => (
+                <Badge key={t} variant="outline" className="font-normal">{t}</Badge>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="flex gap-2">
-          {p.links.map((l) => (
-            <Button key={l.href} variant="outline" size="sm" asChild>
+
+        <div className="mt-5 flex flex-wrap items-center gap-2.5">
+          <Button
+            asChild
+            data-testid="project-cta"
+            className="h-10 gap-2 rounded-[24px] [corner-shape:squircle] px-4 shadow-[0_6px_18px_-6px] shadow-foreground/40 ring-1 ring-foreground/10 hover:bg-primary hover:shadow-[0_8px_22px_-6px] hover:shadow-foreground/50 motion-safe:hover:-translate-y-px"
+          >
+            <ExternalLink href={cta.href}>
+              {p.statusTone === 'live' && (
+                <span aria-hidden className="relative flex size-2">
+                  <span className="absolute inset-0 rounded-full bg-status-live motion-safe:animate-ping" />
+                  <span className="relative size-2 rounded-full bg-status-live" />
+                </span>
+              )}
+              {cta.href.includes('github.com') && <GithubIcon className="size-4" />}
+              <span>{cta.label === '官网' || cta.label === '线上' ? `访问${cta.label}` : cta.label}</span>
+              <span className="font-mono text-xs font-normal text-primary-foreground/60">{new URL(cta.href).host}</span>
+              <ArrowUpRight className="size-4" aria-hidden />
+            </ExternalLink>
+          </Button>
+          {rest.map((l) => (
+            <Button key={l.href} variant="outline" className="h-10 rounded-[24px] [corner-shape:squircle] px-3.5" asChild>
               <ExternalLink href={l.href}>
                 {l.href.includes('github.com') && <GithubIcon />}
                 {l.label} <ArrowUpRight aria-hidden />
@@ -69,35 +94,18 @@ export function ProjectPage() {
 
       <VideoPlayer src={videoUrl(p)} poster={posterUrl(p)} title={p.name} className="mt-8" data-testid="project-video" />
 
-      <div className="mt-10 grid gap-10 md:grid-cols-[1fr_15rem]">
-        <div className="flex flex-col gap-8">
-          <section data-testid="project-problem">
-            <h2 className="mb-3 text-sm font-medium">解决什么问题</h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">{d.problem}</p>
+      <div className="mt-10 flex max-w-2xl flex-col gap-8">
+        <section data-testid="project-problem">
+          <h2 className="mb-3 text-sm font-medium">解决什么问题</h2>
+          <p className="text-sm leading-relaxed text-muted-foreground">{d.problem}</p>
+        </section>
+        {d.audience && (
+          <section data-testid="project-audience">
+            <h2 className="mb-3 text-sm font-medium">适合谁</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">{d.audience}</p>
           </section>
-          <Block id="project-features" title="核心功能" items={d.features} />
-          <Block id="project-highlights" title="关键技术" items={d.highlights} />
-        </div>
-        <aside data-testid="project-meta" className="flex h-fit flex-col gap-5 text-sm md:sticky md:top-6">
-          <div>
-            <div className={metaLabel}>角色</div>
-            {d.role}
-          </div>
-          {p.form && (
-            <div>
-              <div className={metaLabel}>形态</div>
-              {p.form}
-            </div>
-          )}
-          <div>
-            <div className={cn(metaLabel, 'mb-2')}>技术栈</div>
-            <div className="flex flex-wrap gap-1.5">
-              {d.stack.map((s) => (
-                <Badge key={s} variant="outline" className="font-normal">{s}</Badge>
-              ))}
-            </div>
-          </div>
-        </aside>
+        )}
+        <Block id="project-features" title="核心功能" items={d.features} />
       </div>
 
       {next !== p && (
