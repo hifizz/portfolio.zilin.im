@@ -35,6 +35,8 @@ export type Project = {
   }
 }
 
+const THREADCHAT_SCREENSHOT_BASE = 'https://chatkeep.zilin.im/portfolio/threadchat-screenshot/3ca15b95dc72/'
+
 export const projects: Project[] = [
   {
     slug: 'threadchat',
@@ -44,7 +46,7 @@ export const projects: Project[] = [
     status: '已上线（Beta 内测中）',
     statusTone: 'live',
     form: 'Web 应用',
-    tagline: '能分叉聊天的 AI 应用，用树状对话解决研究型、探索性、决策型复杂问题。',
+    tagline: '能分叉聊天的 AI 应用，用树状对话解决研究型、探索性、决策型复杂问题。打造更符合人脑思考方式的 AI 使用体验。专用于调研、决策、方案设计这类需要多方向分析调研的复杂问题。',
     tags: ['Agent', 'AI 交互', '工具调用', '上下文压缩', '记忆', '评测'],
     links: [
       { label: '官网', href: 'https://thread.zilin.im/' },
@@ -62,25 +64,25 @@ export const projects: Project[] = [
         'Project 工具与 GitHub 接入',
       ],
       screenshots: [
-        { src: '/threadchat-screenshot/SCR-20261026-olyb.png', caption: '多列并排展示分支，沿不同方向继续追问' },
-        { src: '/threadchat-screenshot/SCR-20261026-omaj.png', caption: '用树状视图查看整场对话的脉络' },
-        { src: '/threadchat-screenshot/SCR-20261026-ombh.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-omcj.jpeg' },
-        { src: '/threadchat-screenshot/SCR-20261026-omdz.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-omgk.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-omgx.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-omhi.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-omht.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-ommw.png', caption: '在输入框中引用已有文档，继续讨论' },
-        { src: '/threadchat-screenshot/SCR-20261026-omrw.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-omuv.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-onne.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-onqm.png', caption: '划选回复中的内容，带着问题开启新分支' },
-        { src: '/threadchat-screenshot/SCR-20261026-onrz.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-oscu.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-oskk.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-otvc.png' },
-        { src: '/threadchat-screenshot/SCR-20261026-oueo.png', caption: '可随意开启分支' },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-olyb.webp`, caption: '多列并排展示分支，沿不同方向继续追问' },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omaj.webp`, caption: '用树状视图查看整场对话的脉络' },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-ombh.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omcj.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omdz.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omgk.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omgx.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omhi.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omht.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-ommw.webp`, caption: '在输入框中引用已有文档，继续讨论' },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omrw.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-omuv.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-onne.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-onqm.webp`, caption: '划选回复中的内容，带着问题开启新分支' },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-onrz.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-oscu.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-oskk.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-otvc.webp` },
+        { src: `${THREADCHAT_SCREENSHOT_BASE}SCR-20261026-oueo.webp`, caption: '可随意开启分支' },
       ],
     },
   },
