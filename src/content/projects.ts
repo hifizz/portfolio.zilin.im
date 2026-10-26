@@ -4,6 +4,8 @@ export type ProjectKind = 'product' | 'oss' | 'lab' | 'skill'
 
 export type ProjectLink = { label: string; href: string }
 
+export type ProjectScreenshot = { src: string; caption?: string }
+
 export type Project = {
   slug: string
   name: string
@@ -26,6 +28,8 @@ export type Project = {
   detail?: {
     problem: string
     features: string[]
+    /** 按展示顺序排列；caption 留空时不显示说明 */
+    screenshots?: ProjectScreenshot[]
     /** 适合谁（可选，没写就不显示） */
     audience?: string
   }
@@ -56,6 +60,27 @@ export const projects: Project[] = [
         '多列并排展示分支，支持无限追问',
         '树状聊天组织复杂问题的调研、决策与方案设计',
         'Project 工具与 GitHub 接入',
+      ],
+      screenshots: [
+        { src: '/threadchat-screenshot/SCR-20261026-olyb.png', caption: '多列并排展示分支，沿不同方向继续追问' },
+        { src: '/threadchat-screenshot/SCR-20261026-omaj.png', caption: '用树状视图查看整场对话的脉络' },
+        { src: '/threadchat-screenshot/SCR-20261026-ombh.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-omcj.jpeg' },
+        { src: '/threadchat-screenshot/SCR-20261026-omdz.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-omgk.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-omgx.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-omhi.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-omht.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-ommw.png', caption: '在输入框中引用已有文档，继续讨论' },
+        { src: '/threadchat-screenshot/SCR-20261026-omrw.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-omuv.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-onne.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-onqm.png', caption: '划选回复中的内容，带着问题开启新分支' },
+        { src: '/threadchat-screenshot/SCR-20261026-onrz.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-oscu.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-oskk.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-otvc.png' },
+        { src: '/threadchat-screenshot/SCR-20261026-oueo.png', caption: '可随意开启分支' },
       ],
     },
   },

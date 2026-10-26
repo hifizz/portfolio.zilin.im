@@ -15,7 +15,6 @@ export function Layout() {
           <nav className="flex items-center gap-6 text-muted-foreground">
             <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={navLink}>首页</Link>
             <Link to="/#work" className={navLink}>作品</Link>
-            <Link to="/#writing" className={navLink}>文章</Link>
             <ExternalLink href={profile.blog} className={navLink}>博客</ExternalLink>
             <ExternalLink href={profile.github} className={`${navLink} inline-flex items-center gap-1.5`}>
               <GithubIcon className="size-3.5" />

@@ -28,6 +28,7 @@ export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-tes
             className="absolute inset-0 size-full object-contain"
           />
         )}
+        {showPoster && <div aria-hidden className="placeholder-pattern absolute inset-0 opacity-65" />}
         <span
           className={cn(
             'relative flex items-center gap-2',

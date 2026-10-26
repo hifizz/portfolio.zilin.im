@@ -4,10 +4,10 @@ import { Link, Navigate, useParams } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
 import { GithubIcon } from '@/components/github-icon'
 import { StatusBadge } from '@/components/status-badge'
+import { ProjectMedia } from '@/components/project-media'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { VideoPlayer } from '@/components/video'
-import { posterUrl, projects, videoUrl } from '@/content/projects'
+import { projects } from '@/content/projects'
 
 const products = projects.filter((p) => p.kind === 'product')
 
@@ -92,7 +92,7 @@ export function ProjectPage() {
         </div>
       </header>
 
-      <VideoPlayer src={videoUrl(p)} poster={posterUrl(p)} title={p.name} className="mt-8" data-testid="project-video" />
+      <ProjectMedia key={p.slug} project={p} />
 
       <div className="mt-10 flex max-w-2xl flex-col gap-8">
         <section data-testid="project-problem">
