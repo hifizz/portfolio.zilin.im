@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Mail } from 'lucide-react'
 import { Link } from 'react-router'
-import { Tooltip } from 'radix-ui'
 import { Button } from '@/components/ui/button'
 import { ExternalLink } from '@/components/external-link'
 import { StatusBadge } from '@/components/status-badge'
 import { posterUrl, profile, projects, publicResume } from '@/content/projects'
+
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 const products = projects.filter((project) => project.kind === 'product')
 const tarsIndex = products.findIndex((project) => project.slug === 'tars')
@@ -13,52 +17,68 @@ if (tarsIndex >= 0) products.splice(2, 0, ...products.splice(tarsIndex, 1))
 
 export function ResumePage() {
   const [activityUnavailable, setActivityUnavailable] = useState(false)
+  const root = useRef<HTMLElement>(null)
+
+  // 入场动效与首页保持一致：JS 未执行时内容可见；减少动态偏好下不做动画
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        const reveal = { opacity: 0, y: 12, duration: 0.5, ease: 'power2.out', clearProps: 'opacity,transform' }
+        gsap.from('[data-reveal="hero"]', { ...reveal, stagger: 0.06 })
+        gsap.utils.toArray<HTMLElement>('[data-reveal="block"]').forEach((el) => {
+          gsap.from(el, { ...reveal, scrollTrigger: { trigger: el, start: 'top 90%', once: true } })
+        })
+      })
+      return () => mm.revert()
+    },
+    { scope: root },
+  )
 
   return (
-    <article data-testid="public-resume" className="mx-auto max-w-2xl py-8 sm:py-12">
+    <article ref={root} data-testid="public-resume" className="mx-auto max-w-2xl py-8 sm:py-12">
       <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" aria-hidden /> 返回作品集
       </Link>
 
       <header className="mt-8">
-        <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{publicResume.title}</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
-        <p className="mt-2 text-muted-foreground">{profile.role}</p>
-        <p className="mt-5 text-lg leading-relaxed">{publicResume.summary}</p>
+        <p data-reveal="hero" className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{publicResume.title}</p>
+        <h1 data-reveal="hero" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
+        <p data-reveal="hero" className="mt-2 text-muted-foreground">{profile.role}</p>
+        <p data-reveal="hero" className="mt-5 text-lg leading-relaxed">{publicResume.summary}</p>
+        <div data-reveal="hero" className="mt-6">
+          <Button asChild className="h-10 px-4">
+            <a href={`mailto:${profile.email}`}>
+              <Mail aria-hidden /> 联系我
+            </a>
+          </Button>
+        </div>
       </header>
 
-      <section data-testid="resume-subscriptions" className="mt-10" aria-labelledby="resume-subscriptions">
+      <section data-testid="resume-subscriptions" data-reveal="block" className="mt-10" aria-labelledby="resume-subscriptions">
         <h2 id="resume-subscriptions" className="text-xl font-semibold tracking-tight">我的 AI 订阅</h2>
-        <Tooltip.Provider delayDuration={150}>
-          <ul className="mt-4 flex items-center gap-2 sm:gap-3">
-            {publicResume.subscriptions.map((subscription) => (
-              <li key={subscription.name} className="shrink-0">
-                <Tooltip.Root>
-                  <Tooltip.Trigger asChild>
-                    <ExternalLink href={subscription.href} aria-label={subscription.name} className="block">
-                      <img
-                        src={subscription.icon}
-                        alt={subscription.name}
-                        width={28}
-                        height={28}
-                        className={`size-7 sm:size-8${subscription.muted ? ' grayscale opacity-45' : ''}`}
-                      />
-                    </ExternalLink>
-                  </Tooltip.Trigger>
-                  <Tooltip.Portal>
-                    <Tooltip.Content data-testid="subscription-tooltip" sideOffset={8} className="z-50 rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background shadow-md">
-                      {subscription.name}
-                      <Tooltip.Arrow className="fill-foreground" />
-                    </Tooltip.Content>
-                  </Tooltip.Portal>
-                </Tooltip.Root>
-              </li>
-            ))}
-          </ul>
-        </Tooltip.Provider>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {publicResume.subscriptions.map((subscription) => (
+            <li key={subscription.name}>
+              <ExternalLink
+                href={subscription.href}
+                className="inline-flex items-center gap-2 rounded-full border bg-card py-1.5 pr-3 pl-2 text-sm transition-colors hover:border-foreground/25 hover:text-foreground"
+              >
+                <img
+                  src={subscription.icon}
+                  alt=""
+                  width={16}
+                  height={16}
+                  className={`size-4${subscription.muted ? ' grayscale opacity-45' : ''}`}
+                />
+                <span className={subscription.muted ? 'text-muted-foreground' : undefined}>{subscription.name}</span>
+              </ExternalLink>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <section data-testid="resume-github" className="mt-10" aria-labelledby="resume-github">
+      <section data-testid="resume-github" data-reveal="block" className="mt-10" aria-labelledby="resume-github">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="resume-github" className="text-xl font-semibold tracking-tight">GitHub 活跃记录</h2>
           <ExternalLink href={publicResume.githubActivity.href} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
@@ -84,25 +104,31 @@ export function ResumePage() {
             />
           </div>
         )}
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{publicResume.githubActivity.note}</p>
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {publicResume.githubActivity.note}
+          <span className="sm:hidden">，可左右滑动查看</span>
+        </p>
       </section>
 
-      <section data-testid="resume-projects" className="mt-10" aria-labelledby="resume-projects">
+      <section data-testid="resume-projects" data-reveal="block" className="mt-10" aria-labelledby="resume-projects">
         <h2 id="resume-projects" className="text-xl font-semibold tracking-tight">我的个人作品</h2>
-        <ul className="mt-4 grid gap-3">
+        <ul className="mt-4 grid grid-cols-1 gap-3">
           {products.map((project) => (
             <li key={project.slug}>
-              <Link to={`/projects/${project.slug}`} className="group flex h-full items-start gap-3 rounded-lg border bg-card p-3 transition-colors hover:border-foreground/25">
+              <Link
+                to={`/projects/${project.slug}`}
+                className="group flex h-full items-start gap-4 rounded-lg border bg-card p-3 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5"
+              >
                 {posterUrl(project) && (
-                  <img src={posterUrl(project)} alt="" width={80} height={60} loading="lazy" className="mt-0.5 aspect-4/3 w-20 shrink-0 rounded object-cover" />
+                  <img src={posterUrl(project)} alt="" width={96} height={72} loading="lazy" className="mt-0.5 aspect-4/3 w-24 shrink-0 rounded object-cover" />
                 )}
                 <div className="min-w-0 flex-1">
-                  <h3 className="flex items-start justify-between gap-1 text-sm font-medium">
+                  <h3 className="flex items-start justify-between gap-2 font-medium tracking-tight">
                     {project.name}
-                    <ArrowRight className="mt-0.5 size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
+                    <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
                   </h3>
-                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{project.tagline}</p>
-                  <div className="mt-2"><StatusBadge p={project} /></div>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{project.tagline}</p>
+                  <div className="mt-2.5"><StatusBadge p={project} /></div>
                 </div>
               </Link>
             </li>
@@ -110,36 +136,36 @@ export function ResumePage() {
         </ul>
       </section>
 
-      <section data-testid="resume-design" className="mt-10" aria-labelledby="resume-design">
+      <section data-testid="resume-design" data-reveal="block" className="mt-10" aria-labelledby="resume-design">
         <h2 id="resume-design" className="text-xl font-semibold tracking-tight">我的审美</h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {publicResume.designWork.map((work) => (
             <li key={work.href}>
-              <ExternalLink href={work.href} className="group flex h-full items-center justify-between gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-foreground/25">
+              <ExternalLink href={work.href} className="group flex h-full items-center justify-between gap-3 rounded-lg border bg-card p-4 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5">
                 <div>
-                  <h3 className="text-sm font-medium group-hover:underline group-hover:underline-offset-4">{work.title}</h3>
-                  <p className="mt-1 text-xs text-muted-foreground">{work.description}</p>
+                  <h3 className="font-medium group-hover:underline group-hover:underline-offset-4">{work.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{work.description}</p>
                 </div>
-                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden />
               </ExternalLink>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="mt-10" aria-labelledby="resume-experience">
+      <section data-reveal="block" className="mt-10" aria-labelledby="resume-experience">
         <h2 id="resume-experience" className="text-xl font-semibold tracking-tight">工作经历概览</h2>
-        <div className="mt-4 divide-y border-y">
+        <ol className="mt-4 divide-y border-y">
           {publicResume.experience.map((experience) => (
-            <section key={experience.company} className="py-5">
+            <li key={experience.company} className="py-5">
               <h3 className="font-medium">{experience.company}</h3>
               <p className="mt-2 leading-relaxed text-muted-foreground">{experience.summary}</p>
-            </section>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div data-reveal="block" className="mt-10 flex flex-col gap-3 sm:flex-row">
         <Button asChild className="h-11 px-4">
           <a href={`mailto:${profile.email}`}>
             <Mail aria-hidden /> 联系我，获取完整简历

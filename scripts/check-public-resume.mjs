@@ -43,24 +43,15 @@ for (const width of [1280, 390, 320]) {
     await Promise.all(icons.map(img => img.decode()))
     return icons.map(img => ({ loaded: img.naturalWidth > 0, grayscale: getComputedStyle(img).filter.includes('grayscale(1)') }))
   }), Array.from({ length: 7 }, (_, i) => ({ loaded: true, grayscale: i === 1 })))
+  assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-subscriptions"] a')].map(link => link.textContent.trim())), ['Codex', 'Claude Code', 'Devin', 'CommandCode GOAT', 'Ark', 'GLM', 'Kimi'])
   assert.ok(await page.evaluate(() => {
     const items = [...document.querySelectorAll('[data-testid="resume-subscriptions"] li')]
-    return items.every(item => item.textContent.trim() === '' && getComputedStyle(item).borderTopWidth === '0px' && item.getBoundingClientRect().top === items[0].getBoundingClientRect().top && item.querySelector('img').alt)
-  }), `Subscription logos only, one row at ${width}px`)
-  assert.ok(await page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('[data-testid="resume-subscriptions"] ul')).columnGap) <= 12), 'Compact logo spacing')
+    return items.every(item => item.getBoundingClientRect().height <= 40)
+  }), `Subscription chips stay compact at ${width}px`)
   assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-subscriptions"] a')].map(link => {
     const url = new URL(link.href)
     return { url: url.origin + url.pathname, target: link.target, safe: link.rel.includes('noopener') }
   })), ['https://openai.com/codex/', 'https://code.claude.com/', 'https://devin.ai/', 'https://commandcode.ai/', 'https://www.volcengine.com/product/ark', 'https://bigmodel.cn/', 'https://www.kimi.com/'].map(url => ({ url, target: '_blank', safe: true })))
-  if (width === 1280) {
-    await page.hover('[data-testid="resume-subscriptions"] a[aria-label="Codex"]')
-    await page.waitForSelector('[data-testid="subscription-tooltip"]')
-    assert.ok((await page.snapshot()).includes('Codex'))
-    await page.focus('[data-testid="resume-subscriptions"] a[aria-label="Claude Code"]')
-    await page.waitForFunction(() => document.querySelector('[data-testid="subscription-tooltip"]')?.textContent.includes('Claude Code'))
-    await page.press('[data-testid="resume-subscriptions"] a[aria-label="Claude Code"]', 'Escape')
-    await page.waitForSelector('[data-testid="subscription-tooltip"]', { state: 'hidden' })
-  }
   assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-design"] a')].map(link => ({ host: new URL(link.href).hostname, target: link.target, safe: link.rel.includes('noopener') }))), [
     { host: 'effect-preview.vercel.app', target: '_blank', safe: true },
     { host: 'chatkeep.dev', target: '_blank', safe: true },
