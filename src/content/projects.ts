@@ -270,7 +270,33 @@ export const publicResume = {
   cta: '我正在找工作，点击查看我的简历',
   title: '公开简历',
   summary: '关注 AI 应用与 Agent 产品的设计、开发和落地，具备复杂客户端、SDK 与前端基础能力建设经验。',
-  notice: '这里仅展示工作经历概览，不包含内部项目细节与非公开数据。如需完整简历，欢迎通过邮件联系。',
+  subscriptions: [
+    { name: 'Codex', icon: '/icons/ai/codex-color.svg', href: 'https://openai.com/codex/', muted: false },
+    { name: 'Claude Code', icon: '/icons/ai/claudecode-color.svg', href: 'https://code.claude.com/', muted: true },
+    { name: 'Devin', icon: '/icons/ai/devin-color.svg', href: 'https://devin.ai/', muted: false },
+    { name: 'CommandCode GOAT', icon: '/icons/ai/commandcode.svg', href: 'https://commandcode.ai/', muted: false },
+    // Ark 使用火山引擎标识，GLM 使用智谱标识。
+    { name: 'Ark', icon: '/icons/ai/volcengine-color.svg', href: 'https://www.volcengine.com/product/ark', muted: false },
+    { name: 'GLM', icon: '/icons/ai/zhipu-color.svg', href: 'https://bigmodel.cn/', muted: false },
+    { name: 'Kimi', icon: '/icons/ai/kimi-color.svg', href: 'https://www.kimi.com/', muted: false },
+  ],
+  githubActivity: {
+    image: 'https://ghchart.rshah.org/1a7f37/hifizz',
+    href: `${profile.github}?tab=overview`,
+    note: '最近一年 · ghchart',
+  },
+  designWork: [
+    {
+      title: '动效设计',
+      description: '交互与动效演示',
+      href: 'https://effect-preview.vercel.app/',
+    },
+    {
+      title: 'chatkeep 产品首页',
+      description: '独立产品的网站设计',
+      href: 'https://chatkeep.dev/?ref=portfolio.zilin.im',
+    },
+  ],
   experience: [
     {
       company: '字节跳动 · 飞书',
