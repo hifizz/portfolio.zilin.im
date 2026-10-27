@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { VideoOff } from 'lucide-react'
+// import { VideoOff } from 'lucide-react' // 恢复准备中蒙层时启用
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
@@ -28,6 +28,7 @@ export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-tes
             className="absolute inset-0 size-full object-contain"
           />
         )}
+        {/* 介绍视频准备中蒙层暂时停用，后续恢复。
         {showPoster && <div aria-hidden className="placeholder-pattern absolute inset-0 opacity-65" />}
         <span
           className={cn(
@@ -38,6 +39,7 @@ export function VideoPlayer({ src, poster, title, autoPlay, className, 'data-tes
           <VideoOff className="size-4" aria-hidden />
           介绍视频准备中
         </span>
+        */}
       </div>
     )
   }

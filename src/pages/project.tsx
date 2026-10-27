@@ -14,8 +14,8 @@ const products = projects.filter((p) => p.kind === 'product')
 function Block({ id, title, items }: { id: string; title: string; items: string[] }) {
   return (
     <section data-testid={id}>
-      <h2 className="mb-3 text-sm font-medium">{title}</h2>
-      <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground marker:text-border">
+      <h2 className="mb-3 text-lg font-semibold tracking-tight sm:text-xl">{title}</h2>
+      <ul className="list-disc space-y-2 pl-5 text-base leading-relaxed text-foreground/75 marker:text-foreground/25">
         {items.map((t) => (
           <li key={t}>{t}</li>
         ))}
@@ -42,11 +42,11 @@ export function ProjectPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      <Link to="/#work" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link to="/#work" className="mx-auto flex w-full max-w-2xl items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" aria-hidden /> 返回作品
       </Link>
 
-      <header data-testid="project-header" className="mt-6">
+      <header data-testid="project-header" className="mx-auto mt-6 w-full max-w-2xl">
         <div className="max-w-2xl">
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-semibold tracking-tight">{p.name}</h1>
@@ -94,15 +94,15 @@ export function ProjectPage() {
 
       <ProjectMedia key={p.slug} project={p} />
 
-      <div className="mt-10 flex max-w-2xl flex-col gap-8">
+      <div className="mx-auto mt-10 flex w-full max-w-2xl flex-col gap-10 sm:mt-12 sm:gap-12">
         <section data-testid="project-problem">
-          <h2 className="mb-3 text-sm font-medium">解决什么问题</h2>
-          <p className="text-sm leading-relaxed text-muted-foreground">{d.problem}</p>
+          <h2 className="mb-3 text-lg font-semibold tracking-tight sm:text-xl">解决什么问题</h2>
+          <p className="text-base leading-relaxed text-foreground/75">{d.problem}</p>
         </section>
         {d.audience && (
           <section data-testid="project-audience">
-            <h2 className="mb-3 text-sm font-medium">适合谁</h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">{d.audience}</p>
+            <h2 className="mb-3 text-lg font-semibold tracking-tight sm:text-xl">适合谁</h2>
+            <p className="text-base leading-relaxed text-foreground/75">{d.audience}</p>
           </section>
         )}
         <Block id="project-features" title="核心功能" items={d.features} />
@@ -112,7 +112,7 @@ export function ProjectPage() {
         <Link
           data-testid="project-next"
           to={`/projects/${next.slug}`}
-          className="mt-16 flex items-center justify-between border-t pt-6 text-sm text-muted-foreground hover:text-foreground"
+          className="mx-auto mt-16 flex w-full max-w-2xl items-center justify-between border-t pt-6 text-sm text-muted-foreground hover:text-foreground"
         >
           <span>下一个项目</span>
           <span className="flex items-center gap-1 font-medium">

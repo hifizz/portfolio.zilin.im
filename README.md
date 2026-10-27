@@ -19,7 +19,7 @@ pnpm build    # 产物在 dist/
 
 1. 把视频放进 `public/videos/`，文件名与项目的 `video` 字段一致（如 `threadchat.mp4`）。
 2. 可选封面图放 `public/posters/`（如 `threadchat.jpg`）。
-3. 文件不存在时自动显示「介绍视频准备中」占位。
+3. 文件不存在时显示封面图；「介绍视频准备中」蒙层已暂时注释，后续恢复。
 4. 换 CDN：设置环境变量 `VITE_MEDIA_BASE=https://cdn.xxx/videos/`，或把 `video` 字段直接写成完整 URL。
 
 ## ThreadChat 截图

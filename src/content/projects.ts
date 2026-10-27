@@ -95,10 +95,7 @@ export const projects: Project[] = [
     form: 'Web 应用 · 开源',
     tagline: '对标 Cursor Cloud Agents 的自托管云端编码 Agent：在云端沙箱里改代码、跑测试、开 PR。',
     tags: ['Coding Agent', '沙箱', 'Durable Execution', '人工审批'],
-    links: [
-      { label: '线上', href: 'https://pi.zilin.im' },
-      { label: 'GitHub', href: 'https://github.com/hifizz/pi-cloud-agents' },
-    ],
+    links: [{ label: 'GitHub', href: 'https://github.com/hifizz/pi-cloud-agents' }],
     video: 'pi-cloud-agents.mp4',
     poster: 'pi-cloud-agents.jpg',
     detail: {
