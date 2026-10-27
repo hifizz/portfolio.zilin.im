@@ -160,8 +160,51 @@
     background-size: auto, 16px 16px;
   }
 
-  /* 卡片光标高光：--x/--y 由 pointermove 设置，极淡 */
-  .card-spotlight {
-    background: radial-gradient(260px circle at var(--x, 50%) var(--y, 50%), color-mix(in oklab, var(--foreground) 5%, transparent), transparent 70%);
+  /* 首页与简历共享；translate 独立于入场动画使用的 transform。 */
+  .interactive-card {
+    position: relative;
+    transition: translate 200ms ease-out, border-color 200ms ease-out;
+  }
+
+  .interactive-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    corner-shape: inherit;
+    pointer-events: none;
+    background: radial-gradient(260px circle at var(--card-x, 50%) var(--card-y, 50%), color-mix(in oklab, var(--foreground) 5%, transparent), transparent 70%);
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+  }
+
+  .interactive-card:focus-visible,
+  .interactive-card:has(:focus-visible) {
+    border-color: color-mix(in oklab, var(--foreground) 25%, transparent);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .interactive-card:hover {
+      border-color: color-mix(in oklab, var(--foreground) 25%, transparent);
+    }
+    .interactive-card:hover::before {
+      opacity: 1;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .interactive-card:hover {
+      translate: 0 -2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .interactive-card,
+    .interactive-card::before {
+      transition: none;
+    }
+    .interactive-card::before {
+      display: none;
+    }
   }
 }

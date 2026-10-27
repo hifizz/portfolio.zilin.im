@@ -7,6 +7,7 @@ import { Link } from 'react-router'
 import { Tooltip } from 'radix-ui'
 import { Button } from '@/components/ui/button'
 import { ExternalLink } from '@/components/external-link'
+import { InteractiveCard } from '@/components/interactive-card'
 import { SectionTitle } from '@/components/section-title'
 import { StatusBadge } from '@/components/status-badge'
 import { posterUrl, profile, projects, publicResume } from '@/content/projects'
@@ -85,22 +86,24 @@ export function ResumePage() {
         <ul className="mt-4 grid grid-cols-1 gap-3">
           {products.map((project) => (
             <li key={project.slug}>
-              <Link
-                to={`/projects/${project.slug}`}
-                className="group flex h-full items-start gap-4 rounded-[24px] [corner-shape:squircle] border bg-card p-3 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5"
-              >
-                {posterUrl(project) && (
-                  <img src={posterUrl(project)} alt="" width={96} height={72} loading="lazy" className="mt-0.5 aspect-4/3 w-24 shrink-0 rounded-[14px] [corner-shape:squircle] object-cover" />
-                )}
-                <div className="min-w-0 flex-1">
-                  <h3 className="flex items-start justify-between gap-2 font-medium tracking-tight">
-                    {project.name}
-                    <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{project.tagline}</p>
-                  <div className="mt-2.5"><StatusBadge p={project} /></div>
-                </div>
-              </Link>
+              <InteractiveCard>
+                <Link
+                  to={`/projects/${project.slug}`}
+                  className="group flex h-full items-start gap-4 rounded-[24px] [corner-shape:squircle] border bg-card p-3"
+                >
+                  {posterUrl(project) && (
+                    <img src={posterUrl(project)} alt="" width={96} height={72} loading="lazy" className="mt-0.5 aspect-4/3 w-24 shrink-0 rounded-[14px] [corner-shape:squircle] object-cover" />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="flex items-start justify-between gap-2 font-medium tracking-tight">
+                      {project.name}
+                      <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-[translate] duration-200 ease-out motion-safe:group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{project.tagline}</p>
+                    <div className="mt-2.5"><StatusBadge p={project} /></div>
+                  </div>
+                </Link>
+              </InteractiveCard>
             </li>
           ))}
         </ul>
@@ -111,13 +114,15 @@ export function ResumePage() {
         <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {publicResume.designWork.map((work) => (
             <li key={work.href}>
-              <ExternalLink href={work.href} className="group flex h-full items-center justify-between gap-3 rounded-[24px] [corner-shape:squircle] border bg-card p-4 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5">
-                <div>
-                  <h3 className="font-medium group-hover:underline group-hover:underline-offset-4">{work.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{work.description}</p>
-                </div>
-                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden />
-              </ExternalLink>
+              <InteractiveCard>
+                <ExternalLink href={work.href} className="group flex h-full items-center justify-between gap-3 rounded-[24px] [corner-shape:squircle] border bg-card p-4">
+                  <div>
+                    <h3 className="font-medium group-hover:underline group-hover:underline-offset-4">{work.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{work.description}</p>
+                  </div>
+                  <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-[translate] duration-200 ease-out motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden />
+                </ExternalLink>
+              </InteractiveCard>
             </li>
           ))}
         </ul>

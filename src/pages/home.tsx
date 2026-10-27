@@ -3,9 +3,9 @@ import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, ArrowUpRight, Bot, Box, FlaskConical, Package, Puzzle, Server, Sparkles, type LucideIcon } from 'lucide-react'
-import { motion } from 'motion/react'
 import { Link, useLocation } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
+import { InteractiveCard } from '@/components/interactive-card'
 import { SectionTitle } from '@/components/section-title'
 import { StatusBadge } from '@/components/status-badge'
 import { VideoThumb } from '@/components/video'
@@ -28,32 +28,23 @@ const formIcon = (form?: string) => (form && formIcons[form]) || Box
 
 function ProductCard({ p }: { p: Project }) {
   return (
-    <motion.article
-      data-testid={`product-card-${p.slug}`}
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
-      onPointerMove={(e) => {
-        const r = e.currentTarget.getBoundingClientRect()
-        e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`)
-        e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`)
-      }}
-      className="group relative flex flex-col gap-3 rounded-lg border bg-card p-3 transition-colors hover:border-foreground/25"
-    >
-      <div aria-hidden className="card-spotlight pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity group-hover:opacity-100" />
-      <VideoThumb src={videoUrl(p)} poster={posterUrl(p)} title={p.name} />
-      <div className="flex flex-1 flex-col gap-1.5 px-1 pb-1">
-        <div className="flex items-center gap-2">
-          <h3 className="font-medium tracking-tight">
-            {/* 伸展链接：整张卡片可点，视频按钮层级更高 */}
-            <Link to={`/projects/${p.slug}`} className="after:absolute after:inset-0 after:content-['']">
-              {p.name}
-            </Link>
-          </h3>
-          <StatusBadge p={p} />
+    <InteractiveCard>
+      <article data-testid={`product-card-${p.slug}`} className="group flex flex-col gap-3 rounded-lg border bg-card p-3">
+        <VideoThumb src={videoUrl(p)} poster={posterUrl(p)} title={p.name} />
+        <div className="flex flex-1 flex-col gap-1.5 px-1 pb-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium tracking-tight">
+              {/* 伸展链接：整张卡片可点，视频按钮层级更高 */}
+              <Link to={`/projects/${p.slug}`} className="after:absolute after:inset-0 after:content-['']">
+                {p.name}
+              </Link>
+            </h3>
+            <StatusBadge p={p} />
+          </div>
+          <p className="text-sm text-muted-foreground">{p.tagline}</p>
         </div>
-        <p className="text-sm text-muted-foreground">{p.tagline}</p>
-      </div>
-    </motion.article>
+      </article>
+    </InteractiveCard>
   )
 }
 
