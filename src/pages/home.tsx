@@ -2,13 +2,13 @@ import { createElement, useEffect, useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowUpRight, Bot, Box, FlaskConical, Package, Puzzle, Server, Sparkles, type LucideIcon } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bot, Box, FlaskConical, Package, Puzzle, Server, Sparkles, type LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Link, useLocation } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
 import { StatusBadge } from '@/components/status-badge'
 import { VideoThumb } from '@/components/video'
-import { articles, posterUrl, primaryHref, profile, projects, videoUrl, type Project } from '@/content/projects'
+import { articles, posterUrl, primaryHref, profile, projects, publicResume, videoUrl, type Project } from '@/content/projects'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -122,7 +122,15 @@ export function Home() {
       <section data-testid="home-hero" className="mx-auto max-w-2xl text-center">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{profile.role}</p>
-        <p className="mt-4 text-lg text-muted-foreground">{profile.intro}</p>
+        <Link
+          to="/resume"
+          data-testid="resume-cta"
+          className="mt-4 inline-flex min-h-8 max-w-full items-center justify-center gap-2 rounded-full border border-emerald-600 bg-emerald-700 px-5 py-1 text-sm font-semibold text-white shadow-lg shadow-emerald-900/15 transition-colors hover:bg-emerald-800 focus-visible:outline-emerald-700"
+        >
+          <span>{publicResume.cta}</span>
+          <ArrowRight className="size-4 shrink-0" aria-hidden />
+        </Link>
+        <p className="mt-5 text-lg text-muted-foreground">{profile.intro}</p>
       </section>
 
       <section data-testid="home-featured">

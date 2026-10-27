@@ -1,4 +1,4 @@
-// 作品集唯一内容源。只放 AI 项目；未知信息用 TODO，不要编造。
+// 作品集与公开简历的唯一内容源；不要放敏感信息或编造经历。
 
 export type ProjectKind = 'product' | 'oss' | 'lab' | 'skill'
 
@@ -90,6 +90,7 @@ export const projects: Project[] = [
     slug: 'pi-cloud-agents',
     name: 'Pi-cloud-agents',
     kind: 'product',
+    featured: true,
     status: '已上线（白名单）',
     statusTone: 'live',
     form: 'Web 应用 · 开源',
@@ -113,7 +114,6 @@ export const projects: Project[] = [
     slug: 'chatkeep',
     name: 'chatkeep',
     kind: 'product',
-    featured: true,
     status: '已上线',
     statusTone: 'live',
     form: '浏览器插件',
@@ -259,11 +259,28 @@ export const articles: Article[] = [
 
 export const profile = {
   name: 'zilin',
-  role: 'AI Application Engineer',
+  role: 'AI Product Engineer',
   intro: '把 AI 做成真正可用的产品。独立设计、开发并上线 Agent、AI 交互与浏览器工具。',
   email: 'fizzstack@gmail.com',
   github: 'https://github.com/hifizz',
   blog: 'https://zilin.im',
+}
+
+export const publicResume = {
+  cta: '我正在找工作，点击查看我的简历',
+  title: '公开简历',
+  summary: '关注 AI 应用与 Agent 产品的设计、开发和落地，具备复杂客户端、SDK 与前端基础能力建设经验。',
+  notice: '这里仅展示工作经历概览，不包含内部项目细节与非公开数据。如需完整简历，欢迎通过邮件联系。',
+  experience: [
+    {
+      company: '字节跳动 · 飞书',
+      summary: '负责飞书客户端 AI 功能开发，参与 SDK、跨端能力与前端基础设施建设。',
+    },
+    {
+      company: '米哈游',
+      summary: '负责内部 IM 客户端相关开发，主导协作日历产品开发与开发者工具建设。',
+    },
+  ],
 }
 
 const MEDIA_BASE = import.meta.env.VITE_MEDIA_BASE ?? '/videos/'
