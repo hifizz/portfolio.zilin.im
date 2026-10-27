@@ -5,7 +5,6 @@ import { ExternalLink } from '@/components/external-link'
 import { GithubIcon } from '@/components/github-icon'
 import { StatusBadge } from '@/components/status-badge'
 import { ProjectMedia } from '@/components/project-media'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { projects } from '@/content/projects'
 
@@ -32,7 +31,6 @@ export function ProjectPage() {
   const next = products[(idx + 1) % products.length]
   const d = p.detail
   const [cta, ...rest] = p.links
-  const labels = [p.form, ...p.tags].filter((t): t is string => !!t)
 
   return (
     <motion.article
@@ -53,13 +51,6 @@ export function ProjectPage() {
             <StatusBadge p={p} />
           </div>
           <p className="mt-2 text-muted-foreground">{p.tagline}</p>
-          {labels.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {labels.map((t) => (
-                <Badge key={t} variant="outline" className="font-normal">{t}</Badge>
-              ))}
-            </div>
-          )}
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-2.5">

@@ -11,7 +11,7 @@ export function ProjectMedia({ project }: { project: Project }) {
   const [paused, setPaused] = useState(false)
   const [open, setOpen] = useState(false)
   const mediaRef = useRef<HTMLElement>(null)
-  const touchStart = useRef<number | null>(null)
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
   const reducedMotion = useReducedMotion()
   const screenshots = project.detail?.screenshots ?? []
   const screenshot = screenshots[index - 1]
@@ -56,16 +56,28 @@ export function ProjectMedia({ project }: { project: Project }) {
   const renderMedia = (expanded: boolean) => (
     <figure>
       <div
-        className={`placeholder-pattern relative touch-pan-y overflow-hidden rounded-lg border ${expanded ? 'h-[calc(100dvh-9rem)]' : 'aspect-video'}`}
-        onTouchStart={(event) => { touchStart.current = event.touches[0].clientX }}
+        className={`placeholder-pattern relative overflow-hidden rounded-lg border ${expanded ? 'touch-auto h-[calc(100dvh-9rem)]' : 'touch-pan-y touch-pinch-zoom aspect-video'}`}
+        onTouchStart={(event) => {
+          // 未缩放时单指翻页；双指缩放和放大后的拖动交给浏览器。
+          touchStart.current = event.touches.length === 1 && (window.visualViewport?.scale ?? 1) <= 1
+            ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+            : null
+        }}
+        onTouchMove={(event) => {
+          if (event.touches.length !== 1) touchStart.current = null
+          // 防止弹窗的滚动锁拦截浏览器在缩放后的原生平移。
+          if ((window.visualViewport?.scale ?? 1) > 1) event.stopPropagation()
+        }}
         onTouchCancel={() => { touchStart.current = null }}
         onTouchEnd={(event) => {
-          if (touchStart.current === null) return
-          const delta = event.changedTouches[0].clientX - touchStart.current
+          const start = touchStart.current
           touchStart.current = null
-          if (Math.abs(delta) > 50) {
+          if (!start || event.touches.length || (window.visualViewport?.scale ?? 1) > 1) return
+          const deltaX = event.changedTouches[0].clientX - start.x
+          const deltaY = event.changedTouches[0].clientY - start.y
+          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
             event.preventDefault()
-            move(delta < 0 ? 1 : -1)
+            move(deltaX < 0 ? 1 : -1)
           }
         }}
       >
