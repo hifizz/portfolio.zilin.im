@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { motion } from 'motion/react'
-import { Link, Navigate, useParams } from 'react-router'
+import { Link, Navigate, useNavigate, useParams } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
 import { GithubIcon } from '@/components/github-icon'
 import { StatusBadge } from '@/components/status-badge'
@@ -25,6 +25,7 @@ function Block({ id, title, items }: { id: string; title: string; items: string[
 
 export function ProjectPage() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const idx = products.findIndex((p) => p.slug === slug)
   const p = products[idx]
   if (!p?.detail) return <Navigate to="/" replace />
@@ -40,9 +41,17 @@ export function ProjectPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      <Link to="/#work" className="mx-auto flex w-full max-w-2xl items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="size-3.5" aria-hidden /> 返回作品
-      </Link>
+      <button
+        type="button"
+        data-testid="project-back"
+        onClick={() => {
+          if (window.history.state?.idx > 0) navigate(-1)
+          else navigate('/', { replace: true })
+        }}
+        className="mx-auto flex w-full max-w-2xl cursor-pointer items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeft className="size-3.5" aria-hidden /> 返回
+      </button>
 
       <header data-testid="project-header" className="mx-auto mt-6 w-full max-w-2xl">
         <div className="max-w-2xl">
