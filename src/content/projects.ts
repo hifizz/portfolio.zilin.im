@@ -267,19 +267,23 @@ export const profile = {
 }
 
 export const publicResume = {
-  cta: '我正在找工作，点击查看我的简历',
+  cta: '我正在找工作，点击查看公开简历',
   title: '公开简历',
   summary: '关注 AI 应用与 Agent 产品的设计、开发和落地，具备复杂客户端、SDK 与前端基础能力建设经验。',
   subscriptions: [
+    { name: 'Grok BOT', icon: '/icons/ai/grokbot.svg', href: 'https://x.ai/bot', muted: false },
     { name: 'Codex', icon: '/icons/ai/codex-color.svg', href: 'https://openai.com/codex/', muted: false },
-    { name: 'Claude Code', icon: '/icons/ai/claudecode-color.svg', href: 'https://code.claude.com/', muted: true },
     { name: 'Devin', icon: '/icons/ai/devin-color.svg', href: 'https://devin.ai/', muted: false },
     { name: 'CommandCode GOAT', icon: '/icons/ai/commandcode.svg', href: 'https://commandcode.ai/', muted: false },
     // Ark 使用火山引擎标识，GLM 使用智谱标识。
     { name: 'Ark', icon: '/icons/ai/volcengine-color.svg', href: 'https://www.volcengine.com/product/ark', muted: false },
     { name: 'GLM', icon: '/icons/ai/zhipu-color.svg', href: 'https://bigmodel.cn/', muted: false },
     { name: 'Kimi', icon: '/icons/ai/kimi-color.svg', href: 'https://www.kimi.com/', muted: false },
+    { name: 'Kiro', icon: '/icons/ai/kiro-color.svg', href: 'https://kiro.dev/', muted: false },
+    { name: 'Claude Code', icon: '/icons/ai/claudecode-color.svg', href: 'https://code.claude.com/', muted: true },
+    { name: 'Cursor', icon: '/icons/ai/cursor.svg', href: 'https://cursor.com/', muted: true },
   ],
+  inactiveSubscriptionHint: '不再订阅了',
   githubActivity: {
     image: 'https://ghchart.rshah.org/1a7f37/hifizz',
     href: `${profile.github}?tab=overview`,

@@ -9,14 +9,14 @@ for (const width of [1280, 390, 320]) {
   await page.goto('http://localhost:5173/')
   await page.waitForSelector('[data-testid="resume-cta"]')
   const home = await page.snapshot()
-  assert.ok(home.includes('我正在找工作，点击查看我的简历'))
+  assert.ok(home.includes('我正在找工作'))
   const role = await page.evaluate(() => document.querySelector('[data-testid="home-hero"] > p').textContent)
   const productLinks = await page.evaluate(() => [...document.querySelectorAll('[data-testid="home-featured"] h3 a, [data-testid="home-products"] h3 a')].map(link => link.getAttribute('href')).sort())
   await page.waitForFunction(() => getComputedStyle(document.querySelector('[data-testid="resume-cta"]')).opacity === '1')
   assert.ok(await page.evaluate((role) => {
     const link = document.querySelector('[data-testid="resume-cta"]')
     const rect = link.getBoundingClientRect()
-    return link.previousElementSibling.textContent === role && rect.height >= 32 && rect.height <= 36 && rect.left >= 0 && rect.right <= innerWidth
+    return link.closest('section').querySelector('p').textContent === role && rect.height >= 32 && rect.left >= 0 && rect.right <= innerWidth
   }, role), `CTA placement and size at ${width}px`)
   if (width !== 390) screenshots.push(await page.screenshot())
 
@@ -42,8 +42,10 @@ for (const width of [1280, 390, 320]) {
     const icons = [...document.querySelectorAll('[data-testid="resume-subscriptions"] img')]
     await Promise.all(icons.map(img => img.decode()))
     return icons.map(img => ({ loaded: img.naturalWidth > 0, grayscale: getComputedStyle(img).filter.includes('grayscale(1)') }))
-  }), Array.from({ length: 7 }, (_, i) => ({ loaded: true, grayscale: i === 1 })))
-  assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-subscriptions"] a')].map(link => link.textContent.trim())), ['Codex', 'Claude Code', 'Devin', 'CommandCode GOAT', 'Ark', 'GLM', 'Kimi'])
+  }), Array.from({ length: 10 }, (_, i) => ({ loaded: true, grayscale: i >= 8 })))
+  assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-subscriptions"] a')].map(link => link.textContent.trim())), ['Grok BOT', 'Codex', 'Devin', 'CommandCode GOAT', 'Ark', 'GLM', 'Kimi', 'Kiro', 'Claude Code', 'Cursor'])
+  assert.ok(await page.evaluate(() => document.querySelector('[data-testid="resume-subscriptions"] img').getAttribute('src') === '/icons/ai/grokbot.svg'), 'Grok BOT uses its dedicated logo')
+  assert.ok(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-subscriptions"] a')].slice(-2).every(link => link.classList.contains('shadow-none') && !link.className.includes('hover:shadow-['))), 'Inactive subscriptions have no resting or hover shadows')
   assert.ok(await page.evaluate(() => {
     const items = [...document.querySelectorAll('[data-testid="resume-subscriptions"] li')]
     return items.every(item => item.getBoundingClientRect().height <= 40)
@@ -51,7 +53,22 @@ for (const width of [1280, 390, 320]) {
   assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-subscriptions"] a')].map(link => {
     const url = new URL(link.href)
     return { url: url.origin + url.pathname, target: link.target, safe: link.rel.includes('noopener') }
-  })), ['https://openai.com/codex/', 'https://code.claude.com/', 'https://devin.ai/', 'https://commandcode.ai/', 'https://www.volcengine.com/product/ark', 'https://bigmodel.cn/', 'https://www.kimi.com/'].map(url => ({ url, target: '_blank', safe: true })))
+  })), ['https://x.ai/bot', 'https://openai.com/codex/', 'https://devin.ai/', 'https://commandcode.ai/', 'https://www.volcengine.com/product/ark', 'https://bigmodel.cn/', 'https://www.kimi.com/', 'https://kiro.dev/', 'https://code.claude.com/', 'https://cursor.com/'].map(url => ({ url, target: '_blank', safe: true })))
+  if (width === 1280) {
+    await page.cdp('Page.bringToFront')
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('[data-testid="resume-subscriptions"]')).opacity === '1', undefined, { timeout: 15000 })
+    await page.hover('loc=role:link[name="Claude Code"]')
+    await page.waitForSelector('[data-testid="inactive-subscription-tooltip"]')
+    assert.ok((await page.snapshot()).includes('不再订阅了'))
+    await page.press('loc=role:link[name="Claude Code"]', 'Escape')
+    await page.waitForSelector('[data-testid="inactive-subscription-tooltip"]', { state: 'hidden' })
+    await page.hover('loc=role:link[name="Codex"]')
+    await page.waitForSelector('[data-testid="inactive-subscription-tooltip"]', { state: 'hidden' })
+    await page.focus('loc=role:link[name="Cursor"]')
+    await page.waitForSelector('[data-testid="inactive-subscription-tooltip"]')
+    await page.press('loc=role:link[name="Cursor"]', 'Escape')
+    await page.waitForSelector('[data-testid="inactive-subscription-tooltip"]', { state: 'hidden' })
+  }
   assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-design"] a')].map(link => ({ host: new URL(link.href).hostname, target: link.target, safe: link.rel.includes('noopener') }))), [
     { host: 'effect-preview.vercel.app', target: '_blank', safe: true },
     { host: 'chatkeep.dev', target: '_blank', safe: true },

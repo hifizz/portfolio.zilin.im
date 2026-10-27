@@ -6,6 +6,7 @@ import { ArrowRight, ArrowUpRight, Bot, Box, FlaskConical, Package, Puzzle, Serv
 import { motion } from 'motion/react'
 import { Link, useLocation } from 'react-router'
 import { ExternalLink } from '@/components/external-link'
+import { SectionTitle } from '@/components/section-title'
 import { StatusBadge } from '@/components/status-badge'
 import { VideoThumb } from '@/components/video'
 import { articles, posterUrl, primaryHref, profile, projects, publicResume, videoUrl, type Project } from '@/content/projects'
@@ -24,14 +25,6 @@ const formIcons: Record<string, LucideIcon> = {
 }
 
 const formIcon = (form?: string) => (form && formIcons[form]) || Box
-
-function SectionTitle({ id, children }: { id?: string; children: React.ReactNode }) {
-  return (
-    <h2 id={id} className="mb-4 scroll-mt-20 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-      {children}
-    </h2>
-  )
-}
 
 function ProductCard({ p }: { p: Project }) {
   return (
@@ -104,7 +97,8 @@ export function Home() {
         const reveal = { opacity: 0, y: 12, duration: 0.5, ease: 'power2.out', clearProps: 'opacity,transform' }
         gsap.from('[data-testid="home-hero"] > *', { ...reveal, stagger: 0.06 })
         gsap.utils.toArray<HTMLElement>('section:not([data-testid="home-hero"])').forEach((el) => {
-          gsap.from(el, { ...reveal, scrollTrigger: { trigger: el, start: 'top 85%', once: true } })
+          // 提前 200px 入场，避免首屏底部已经可见却还在等待滚动。
+          gsap.from(el, { ...reveal, scrollTrigger: { trigger: el, start: 'top bottom+=200', once: true } })
         })
       })
       return () => mm.revert()
@@ -122,6 +116,7 @@ export function Home() {
       <section data-testid="home-hero" className="mx-auto max-w-2xl text-center">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{profile.role}</p>
+        <p className="mt-5 text-lg text-muted-foreground">{profile.intro}</p>
         <Link
           to="/resume"
           data-testid="resume-cta"
@@ -130,7 +125,6 @@ export function Home() {
           <span>{publicResume.cta}</span>
           <ArrowRight className="size-4 shrink-0" aria-hidden />
         </Link>
-        <p className="mt-5 text-lg text-muted-foreground">{profile.intro}</p>
       </section>
 
       <section data-testid="home-featured">
