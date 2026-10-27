@@ -46,7 +46,7 @@ export const projects: Project[] = [
     status: '已上线（Beta 内测中）',
     statusTone: 'live',
     form: 'Web 应用',
-    tagline: '能分叉聊天的 AI 应用，用树状对话解决研究型、探索性、决策型复杂问题。打造更符合人脑思考方式的 AI 使用体验。专用于调研、决策、方案设计这类需要多方向分析调研的复杂问题。',
+    tagline: '人和 AI 聊天应该是网状的，而不是线性的。ThreadChat 是一个能分叉聊天的 AI 应用，用树状/网状对话解决研究型、探索性、决策型复杂问题。更符合人脑思考工程学。',
     tags: ['Agent', 'AI 交互', '工具调用', '上下文压缩', '记忆', '评测'],
     links: [
       { label: '官网', href: 'https://thread.zilin.im/' },
@@ -94,7 +94,7 @@ export const projects: Project[] = [
     status: '已上线（白名单）',
     statusTone: 'live',
     form: 'Web 应用 · 开源',
-    tagline: '对标 Cursor Cloud Agents 的自托管云端编码 Agent：在云端沙箱里改代码、跑测试、开 PR。',
+    tagline: '在 AI 基础措施越来越完善的未来，每个人都有很多台远程计算机。用 Pi Durable 可以很轻易的获得一个自部署的在线 Coding 平台，自带你的机器。对标 Cursor Cloud Agents 的自托管云端编码 Agent：在任意浏览器打开工作台，用你自己的订阅，在你的云端沙箱里改代码、跑测试、开 PR。',
     tags: ['Coding Agent', '沙箱', 'Durable Execution', '人工审批'],
     links: [{ label: 'GitHub', href: 'https://github.com/hifizz/pi-cloud-agents' }],
     video: 'pi-cloud-agents.mp4',

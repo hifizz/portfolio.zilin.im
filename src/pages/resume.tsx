@@ -59,6 +59,62 @@ export function ResumePage() {
         </div>
       </header>
 
+      <section data-reveal="block" className="mt-12" aria-labelledby="resume-experience">
+        <SectionTitle id="resume-experience">工作经历概览</SectionTitle>
+        <ol className="mt-4 divide-y-[0.5px] divide-[color-mix(in_oklab,var(--border)_60%,transparent)] border-y-[0.5px] border-border/60">
+          {publicResume.experience.map((experience) => (
+            <li key={experience.company} className="py-5">
+              <h3 className="font-medium">{experience.company}</h3>
+              <p className="mt-2 leading-relaxed text-muted-foreground">{experience.summary}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section data-testid="resume-projects" data-reveal="block" className="mt-14" aria-labelledby="resume-projects">
+        <SectionTitle id="resume-projects">我的个人作品</SectionTitle>
+        <ul className="mt-4 grid grid-cols-1 gap-3">
+          {products.map((project) => (
+            <li key={project.slug}>
+              <Link
+                to={`/projects/${project.slug}`}
+                className="group flex h-full items-start gap-4 rounded-[24px] [corner-shape:squircle] border bg-card p-3 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5"
+              >
+                {posterUrl(project) && (
+                  <img src={posterUrl(project)} alt="" width={96} height={72} loading="lazy" className="mt-0.5 aspect-4/3 w-24 shrink-0 rounded-[14px] [corner-shape:squircle] object-cover" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <h3 className="flex items-start justify-between gap-2 font-medium tracking-tight">
+                    {project.name}
+                    <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{project.tagline}</p>
+                  <div className="mt-2.5"><StatusBadge p={project} /></div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section data-testid="resume-design" data-reveal="block" className="mt-12" aria-labelledby="resume-design">
+        <SectionTitle id="resume-design">我的审美</SectionTitle>
+        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {publicResume.designWork.map((work) => (
+            <li key={work.href}>
+              <ExternalLink href={work.href} className="group flex h-full items-center justify-between gap-3 rounded-[24px] [corner-shape:squircle] border bg-card p-4 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5">
+                <div>
+                  <h3 className="font-medium group-hover:underline group-hover:underline-offset-4">{work.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{work.description}</p>
+                </div>
+                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden />
+              </ExternalLink>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+
       <section data-testid="resume-subscriptions" data-reveal="block" className="mt-12" aria-labelledby="resume-subscriptions">
         <SectionTitle id="resume-subscriptions">我的 AI 订阅</SectionTitle>
         <Tooltip.Provider delayDuration={150}>
@@ -131,71 +187,8 @@ export function ResumePage() {
         </p>
       </section>
 
-      <section data-testid="resume-projects" data-reveal="block" className="mt-14" aria-labelledby="resume-projects">
-        <SectionTitle id="resume-projects">我的个人作品</SectionTitle>
-        <ul className="mt-4 grid grid-cols-1 gap-3">
-          {products.map((project) => (
-            <li key={project.slug}>
-              <Link
-                to={`/projects/${project.slug}`}
-                className="group flex h-full items-start gap-4 rounded-[24px] [corner-shape:squircle] border bg-card p-3 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5"
-              >
-                {posterUrl(project) && (
-                  <img src={posterUrl(project)} alt="" width={96} height={72} loading="lazy" className="mt-0.5 aspect-4/3 w-24 shrink-0 rounded-[14px] [corner-shape:squircle] object-cover" />
-                )}
-                <div className="min-w-0 flex-1">
-                  <h3 className="flex items-start justify-between gap-2 font-medium tracking-tight">
-                    {project.name}
-                    <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{project.tagline}</p>
-                  <div className="mt-2.5"><StatusBadge p={project} /></div>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
 
-      <section data-testid="resume-design" data-reveal="block" className="mt-12" aria-labelledby="resume-design">
-        <SectionTitle id="resume-design">我的审美</SectionTitle>
-        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {publicResume.designWork.map((work) => (
-            <li key={work.href}>
-              <ExternalLink href={work.href} className="group flex h-full items-center justify-between gap-3 rounded-[24px] [corner-shape:squircle] border bg-card p-4 transition-[border-color,transform] hover:border-foreground/25 motion-safe:hover:-translate-y-0.5">
-                <div>
-                  <h3 className="font-medium group-hover:underline group-hover:underline-offset-4">{work.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{work.description}</p>
-                </div>
-                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden />
-              </ExternalLink>
-            </li>
-          ))}
-        </ul>
-      </section>
 
-      <section data-reveal="block" className="mt-12" aria-labelledby="resume-experience">
-        <SectionTitle id="resume-experience">工作经历概览</SectionTitle>
-        <ol className="mt-4 divide-y-[0.5px] divide-[color-mix(in_oklab,var(--border)_60%,transparent)] border-y-[0.5px] border-border/60">
-          {publicResume.experience.map((experience) => (
-            <li key={experience.company} className="py-5">
-              <h3 className="font-medium">{experience.company}</h3>
-              <p className="mt-2 leading-relaxed text-muted-foreground">{experience.summary}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <div data-reveal="block" className="mt-14 flex flex-col gap-3 sm:flex-row">
-        <Button asChild className="h-10 gap-2 rounded-[24px] [corner-shape:squircle] px-4 shadow-[0_6px_18px_-6px] shadow-foreground/40 ring-1 ring-foreground/10 hover:bg-primary hover:shadow-[0_8px_22px_-6px] hover:shadow-foreground/50 motion-safe:hover:-translate-y-px">
-          <a href={`mailto:${profile.email}`}>
-            <Mail aria-hidden /> 联系我，获取完整简历
-          </a>
-        </Button>
-        <Button asChild variant="outline" className="h-10 rounded-[24px] [corner-shape:squircle] px-3.5">
-          <Link to="/#work">查看个人作品 <ArrowRight aria-hidden /></Link>
-        </Button>
-      </div>
     </article>
   )
 }
