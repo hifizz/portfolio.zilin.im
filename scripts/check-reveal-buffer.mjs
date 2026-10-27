@@ -6,7 +6,7 @@ console.log({ spaceId: task.spaceId, page: page.label })
 await page.cdp('Page.bringToFront')
 const routes = [
   ['/', '[data-testid="home-hero"] > *, main section:not([data-testid="home-hero"])'],
-  ['/resume', '[data-reveal]'],
+  ['/resume', '[data-reveal="hero"], [data-reveal="block"], [data-reveal="projects"] > h2, [data-reveal="projects"] > ul > li'],
   ...['threadchat', 'pi-cloud-agents', 'chatkeep', 'readsight', 'tars'].map(slug => [
     `/projects/${slug}`, '[data-testid="project-page"], [data-testid="project-header"], [data-testid="project-problem"], [data-testid="project-features"]',
   ]),

@@ -27,11 +27,20 @@ export function ResumePage() {
       const mm = gsap.matchMedia()
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         const reveal = { opacity: 0, y: 12, duration: 0.5, ease: 'power2.out', clearProps: 'opacity,transform' }
-        gsap.from('[data-reveal="hero"]', { ...reveal, stagger: 0.06 })
-        gsap.utils.toArray<HTMLElement>('[data-reveal="block"]').forEach((el) => {
-          // 与首页一致：进入视口前 200px 就触发，首屏不依赖用户滚动。
-          gsap.from(el, { ...reveal, scrollTrigger: { trigger: el, start: 'top bottom+=200', once: true } })
+        const entrance = gsap.timeline().from('[data-reveal="hero"]', { ...reveal, stagger: 0.06 })
+        const initial: HTMLElement[] = []
+        // 作品标题和每张卡片独立入场，不再对整段列表做一次动画。
+        const targets = gsap.utils.toArray<HTMLElement>(
+          '[data-reveal="block"], [data-reveal="projects"] > h2, [data-reveal="projects"] > ul > li',
+        )
+        targets.forEach((el) => {
+          const { top, bottom } = el.getBoundingClientRect()
+          if (bottom <= 0) return
+          if (top <= window.innerHeight + 200) initial.push(el)
+          else gsap.from(el, { ...reveal, scrollTrigger: { trigger: el, start: 'top bottom+=200', once: true } })
         })
+        // 首屏及 200px 缓冲内的内容错峰播放，不等待用户滚动。
+        entrance.from(initial, { ...reveal, stagger: 0.12 }, 0.3)
       })
       return () => mm.revert()
     },
@@ -71,7 +80,7 @@ export function ResumePage() {
         </ol>
       </section>
 
-      <section data-testid="resume-projects" data-reveal="block" className="mt-14" aria-labelledby="resume-projects">
+      <section data-testid="resume-projects" data-reveal="projects" className="mt-14" aria-labelledby="resume-projects">
         <SectionTitle id="resume-projects">我的个人作品</SectionTitle>
         <ul className="mt-4 grid grid-cols-1 gap-3">
           {products.map((project) => (
