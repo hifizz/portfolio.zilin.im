@@ -23,6 +23,23 @@ function Block({ id, title, items }: { id: string; title: string; items: string[
   )
 }
 
+function DetailSection({ id, title, items }: { id: string; title: string; items?: { title: string; description: string }[] }) {
+  if (!items?.length) return null
+  return (
+    <section data-testid={id}>
+      <h2 className="mb-5 text-lg font-semibold tracking-tight sm:text-xl">{title}</h2>
+      <div className="space-y-6">
+        {items.map((item) => (
+          <div key={item.title}>
+            <h3 className="mb-2 font-medium">{item.title}</h3>
+            <p className="text-base leading-relaxed text-foreground/75">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export function ProjectPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
@@ -55,7 +72,7 @@ export function ProjectPage() {
 
       <header data-testid="project-header" className="mx-auto mt-6 w-full max-w-2xl">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-3xl font-semibold tracking-tight">{p.name}</h1>
             <StatusBadge p={p} />
           </div>
@@ -106,6 +123,15 @@ export function ProjectPage() {
           </section>
         )}
         <Block id="project-features" title="核心功能" items={d.features} />
+        <DetailSection id="project-challenges" title="挑战与难点" items={d.challenges} />
+        <DetailSection id="project-engineering" title="工程实践" items={d.engineering} />
+        {d.stack && d.stack.length > 0 && (
+          <section data-testid="project-stack">
+            <h2 className="mb-3 text-lg font-semibold tracking-tight sm:text-xl">技术栈</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">{d.stack.join(' · ')}</p>
+          </section>
+        )}
+        {d.note && <p data-testid="project-note" className="text-sm leading-relaxed text-muted-foreground">{d.note}</p>}
       </div>
 
       {next !== p && (

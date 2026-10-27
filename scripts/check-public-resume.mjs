@@ -29,7 +29,7 @@ for (const width of [1280, 390, 320]) {
     await page.waitForSelector('[data-testid="public-resume"]')
   }
   const resume = await page.snapshot({ scope: 'full_page' })
-  for (const text of ['公开简历', '字节跳动 · 飞书', '米哈游', '联系我，获取完整简历', '我的 AI 订阅', 'GitHub 活跃记录', '我的个人作品', '我的审美']) assert.ok(resume.includes(text))
+  for (const text of ['公开简历', '字节跳动 · 飞书', '米哈游', '联系我', '我的 AI 订阅', 'GitHub 活跃记录', '我的个人作品', '我的审美']) assert.ok(resume.includes(text))
   assert.ok(!/测试密码|测试账号|\b1[3-9]\d{9}\b|3000|900ms|TODO/.test(resume), 'No private resume details or placeholders')
   assert.equal(await page.evaluate(() => document.querySelectorAll('section[aria-labelledby="resume-experience"] h3').length), 2)
   assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('[data-testid="resume-projects"] a')].map(link => link.getAttribute('href')).sort()), productLinks)
@@ -56,6 +56,7 @@ for (const width of [1280, 390, 320]) {
   })), ['https://x.ai/bot', 'https://openai.com/codex/', 'https://devin.ai/', 'https://commandcode.ai/', 'https://www.volcengine.com/product/ark', 'https://bigmodel.cn/', 'https://www.kimi.com/', 'https://kiro.dev/', 'https://code.claude.com/', 'https://cursor.com/'].map(url => ({ url, target: '_blank', safe: true })))
   if (width === 1280) {
     await page.cdp('Page.bringToFront')
+    await page.evaluate(() => document.querySelector('[data-testid="resume-subscriptions"]').scrollIntoView({ block: 'center' }))
     await page.waitForFunction(() => getComputedStyle(document.querySelector('[data-testid="resume-subscriptions"]')).opacity === '1', undefined, { timeout: 15000 })
     await page.hover('loc=role:link[name="Claude Code"]')
     await page.waitForSelector('[data-testid="inactive-subscription-tooltip"]')
@@ -76,7 +77,10 @@ for (const width of [1280, 390, 320]) {
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `No horizontal overflow at ${width}px`)
   if (width === 390) screenshots.push(await page.screenshot())
   if (width === 320) {
-    await page.evaluate(() => document.querySelector('[data-testid="github-contributions"]')?.dispatchEvent(new Event('error')))
+    await page.evaluate(() => {
+      document.querySelector('[data-testid="resume-github"]').scrollIntoView({ block: 'center' })
+      document.querySelector('[data-testid="github-contributions"]')?.dispatchEvent(new Event('error'))
+    })
     await page.waitForSelector('[data-testid="resume-github"] [role="status"]')
     assert.ok(await page.evaluate(() => document.querySelector('[data-testid="resume-github"] a').href.startsWith('https://github.com/hifizz')))
     await page.click('[data-testid="resume-projects"] a[href="/projects/pi-cloud-agents"]')
@@ -85,8 +89,8 @@ for (const width of [1280, 390, 320]) {
     await page.goto('http://localhost:5173/resume')
     await page.waitForSelector('[data-testid="public-resume"]')
   }
-  await page.click('loc=role:link[name="查看个人作品"]')
-  await page.waitForURL('**/#work')
+  await page.click('loc=role:link[name="返回作品集"]')
+  await page.waitForURL('http://localhost:5173/')
   await page.waitForSelector('[data-testid="home-featured"]')
 }
 
