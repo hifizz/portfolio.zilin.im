@@ -69,7 +69,7 @@ export function ResumePage() {
         </div>
       </header>
 
-      <section data-reveal="block" className="mt-12" aria-labelledby="resume-experience">
+      {/*<section data-reveal="block" className="mt-12" aria-labelledby="resume-experience">
         <SectionTitle id="resume-experience">工作经历概览</SectionTitle>
         <ol className="mt-4 divide-y-[0.5px] divide-[color-mix(in_oklab,var(--border)_60%,transparent)] border-y-[0.5px] border-border/60">
           {publicResume.experience.map((experience) => (
@@ -79,7 +79,7 @@ export function ResumePage() {
             </li>
           ))}
         </ol>
-      </section>
+      </section>*/}
 
       <section data-testid="resume-projects" data-reveal="projects" className="mt-14" aria-labelledby="resume-projects">
         <SectionTitle id="resume-projects">我的个人作品</SectionTitle>

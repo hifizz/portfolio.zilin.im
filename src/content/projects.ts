@@ -388,7 +388,9 @@ export const profile = {
 export const publicResume = {
   cta: '我正在找工作，点击查看公开简历',
   title: '公开简历',
-  summary: '具有复杂客户端、SDK 与协作产品开发经验，现独立设计和开发 AI 应用。实践方向包括分支对话与上下文组织、附件检索、工具调用、云端 Agent 执行和 Computer Use。',
+  summary: `我之前在字节跳动的飞书和米哈游任职开发即时通讯软件的 PC 客户端，具有复杂客户端、SDK 与协作产品开发经验，现独立设计和开发 AI 应用。
+  实践方向包括 Agentic Coding 实践与技巧、AI 自动化、Agent 控制平面、通过 AI 自学陌生领域知识、Personal Agent 等。`,
+// summary: '具有 7 年左右的复杂客户端 SDK 与协作产品开发经验，项目代码规模超过上百万行。近一年来一直在做独立开发，通过 AI 上线了多款产品，并深入了解 Agent 内部开发原理以及制作轮子。',
   subscriptions: [
     { name: 'Grok BOT', icon: '/icons/ai/grokbot.svg', href: 'https://x.ai/bot', muted: false },
     { name: 'Codex', icon: '/icons/ai/codex-color.svg', href: 'https://openai.com/codex/', muted: false },
@@ -409,6 +411,11 @@ export const publicResume = {
     note: '最近一年 · ghchart',
   },
   designWork: [
+    {
+      title: 'ThreadChat 产品首页',
+      description: "独立产品的 landing 页设计",
+      href: 'https://thread.zilin.im/'
+    },
     {
       title: '动效设计',
       description: '交互与动效演示',
