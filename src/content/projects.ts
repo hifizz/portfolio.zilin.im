@@ -379,7 +379,7 @@ export const articles: Article[] = [
 export const profile = {
   name: 'zilin',
   role: 'AI Product Engineer',
-  intro: '独立设计和开发 AI 产品，下一份工作想成为一个产品工程师。AI 时代每个人都可以构建自己的产品。之前在飞书与米哈游参与 IM 客户端、SDK、Messager、日历和复杂协作产品开发。',
+  intro: '我设计和开发 AI 产品，探索人与 AI 一起思考、研究和完成任务的方式。从分支对话到云端编码、桌面助手，希望把新的可能性做成可以使用的作品。',
   email: 'fizzstack@gmail.com',
   github: 'https://github.com/hifizz',
   blog: 'https://zilin.im',
