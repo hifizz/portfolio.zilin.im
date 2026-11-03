@@ -56,6 +56,22 @@ for (const width of [1280, 390, 320]) {
   })), ['https://x.ai/bot', 'https://openai.com/codex/', 'https://devin.ai/', 'https://commandcode.ai/', 'https://www.volcengine.com/product/ark', 'https://bigmodel.cn/', 'https://www.kimi.com/', 'https://kiro.dev/', 'https://code.claude.com/', 'https://cursor.com/'].map(url => ({ url, target: '_blank', safe: true })))
   if (width === 1280) {
     await page.cdp('Page.bringToFront')
+    const copyCheck = await page.evaluate(async () => {
+      const copy = document.querySelector('[data-testid="copy-email"]')
+      const contact = document.querySelector('[data-testid="resume-contact"]')
+      const copyRect = copy.getBoundingClientRect()
+      const contactRect = contact.getBoundingClientRect()
+      const beside = copyRect.left >= contactRect.right && Math.abs(copyRect.top - contactRect.top) < 4 && copyRect.height === 40
+      let written = null
+      Object.assign(navigator.clipboard, { writeText: async (text) => { written = text } })
+      copy.click()
+      await new Promise((resolve) => setTimeout(resolve, 50))
+      return { beside, written, label: copy.getAttribute('aria-label'), announced: document.querySelector('[role="status"]').textContent }
+    })
+    assert.ok(copyCheck.beside, 'Copy button sits right of the contact button at the same height')
+    assert.equal(copyCheck.written, 'fizzstack@gmail.com')
+    assert.equal(copyCheck.label, '邮箱已复制')
+    assert.equal(copyCheck.announced, '邮箱已复制')
     await page.evaluate(() => document.querySelector('[data-testid="resume-subscriptions"]').scrollIntoView({ block: 'center' }))
     await page.waitForFunction(() => getComputedStyle(document.querySelector('[data-testid="resume-subscriptions"]')).opacity === '1', undefined, { timeout: 15000 })
     await page.hover('loc=role:link[name="Claude Code"]')

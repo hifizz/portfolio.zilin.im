@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Mail } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy, Mail } from 'lucide-react'
 import { Link } from 'react-router'
 import { Tooltip } from 'radix-ui'
 import { Button } from '@/components/ui/button'
@@ -20,7 +20,32 @@ if (tarsIndex >= 0) products.splice(2, 0, ...products.splice(tarsIndex, 1))
 
 export function ResumePage() {
   const [activityUnavailable, setActivityUnavailable] = useState(false)
+  const [emailCopied, setEmailCopied] = useState(false)
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const root = useRef<HTMLElement>(null)
+
+  const copyEmail = async () => {
+    let copied = false
+    try {
+      await navigator.clipboard.writeText(profile.email)
+      copied = true
+    } catch {
+      // 非安全上下文（如 http 访问）无 navigator.clipboard，退回 execCommand
+      const textarea = document.createElement('textarea')
+      textarea.value = profile.email
+      textarea.setAttribute('readonly', '')
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.append(textarea)
+      textarea.select()
+      copied = document.execCommand('copy')
+      textarea.remove()
+    }
+    if (!copied) return
+    setEmailCopied(true)
+    clearTimeout(copyTimer.current)
+    copyTimer.current = setTimeout(() => setEmailCopied(false), 2000)
+  }
 
   // 入场动效与首页保持一致：JS 未执行时内容可见；减少动态偏好下不做动画
   useGSAP(
@@ -59,13 +84,36 @@ export function ResumePage() {
         <h1 data-reveal="hero" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{profile.name}</h1>
         <p data-reveal="hero" className="mt-2 text-muted-foreground">{profile.role}</p>
         <p data-reveal="hero" className="mt-5 text-lg leading-relaxed">{publicResume.summary}</p>
-        <div data-reveal="hero" className="mt-6">
+        <div data-reveal="hero" className="mt-6 flex flex-wrap items-center gap-2">
           <Button asChild data-testid="resume-contact" className="h-10 gap-2 rounded-[24px] [corner-shape:squircle] px-4 shadow-[0_6px_18px_-6px] shadow-foreground/40 ring-1 ring-foreground/10 hover:bg-primary hover:shadow-[0_8px_22px_-6px] hover:shadow-foreground/50 motion-safe:hover:-translate-y-px">
             <a href={`mailto:${profile.email}`}>
               <Mail aria-hidden /> 联系我
               <span className="font-mono text-xs font-normal text-primary-foreground/60">{profile.email}</span>
             </a>
           </Button>
+          <Tooltip.Provider delayDuration={150}>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  data-testid="copy-email"
+                  onClick={copyEmail}
+                  aria-label={emailCopied ? '邮箱已复制' : '复制邮箱'}
+                  className="size-10 rounded-[24px] [corner-shape:squircle] shadow-[0_2px_8px_-3px] shadow-foreground/15 hover:shadow-[0_4px_12px_-4px] hover:shadow-foreground/20"
+                >
+                  {emailCopied ? <Check aria-hidden /> : <Copy aria-hidden />}
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content sideOffset={8} className="z-50 rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background shadow-md">
+                  {emailCopied ? '已复制' : '复制邮箱'}
+                  <Tooltip.Arrow className="fill-foreground" />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+          <span role="status" className="sr-only">{emailCopied ? '邮箱已复制' : ''}</span>
         </div>
       </header>
 
