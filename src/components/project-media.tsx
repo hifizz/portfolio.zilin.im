@@ -107,7 +107,7 @@ export function ProjectMedia({ project }: { project: Project }) {
           </motion.div>
         </AnimatePresence>
         {!expanded && index === 0 && (
-          <Button type="button" variant="ghost" size="icon-sm" className="absolute top-2 right-2 bg-background/80" aria-label="放大查看介绍视频" aria-haspopup="dialog" onClick={() => {
+          <Button type="button" variant="ghost" size="icon-sm" className="absolute top-2 right-2 bg-background/80" aria-label={project.video ? '放大查看介绍视频' : '放大查看封面'} aria-haspopup="dialog" onClick={() => {
             mediaRef.current?.querySelector('video')?.pause()
             setOpen(true)
           }}>
@@ -145,7 +145,7 @@ export function ProjectMedia({ project }: { project: Project }) {
         ref={mediaRef}
         role="region"
         aria-roledescription="轮播"
-        aria-label={`${project.name} 介绍视频与截图`}
+        aria-label={`${project.name} ${project.video ? '介绍视频与截图' : '封面与截图'}`}
         tabIndex={0}
         onPlayCapture={() => setPaused(true)}
         onKeyDown={handleKeyDown}

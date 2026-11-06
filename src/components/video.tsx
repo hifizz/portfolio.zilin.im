@@ -74,7 +74,7 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
           e.stopPropagation()
           setOpen(true)
         }}
-        aria-label={`播放 ${title} 介绍视频`}
+        aria-label={src ? `播放 ${title} 介绍视频` : `查看 ${title} 封面`}
         className={cn(
           'placeholder-pattern @container relative block aspect-video w-full overflow-hidden rounded-md border transition-colors',
           className,
@@ -100,7 +100,7 @@ export function VideoThumb({ src, poster, title, className }: Omit<Props, 'autoP
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent data-testid="video-dialog" className="max-w-4xl p-2 sm:max-w-4xl">
-          <DialogTitle className="sr-only">{title} 介绍视频</DialogTitle>
+          <DialogTitle className="sr-only">{title} {src ? '介绍视频' : '封面'}</DialogTitle>
           {open && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2, ease: 'easeOut' }}>
               <VideoPlayer src={src} poster={poster} title={title} autoPlay />

@@ -239,6 +239,74 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: 'morilo',
+    name: 'Morilo',
+    kind: 'product',
+    status: '早期版本 · macOS',
+    statusTone: 'beta',
+    form: '桌面应用 · 开源',
+    tagline: '桌面上的 AI 工作伙伴。让调研、写作与代码各有一个 Bot，用连续短消息自然交流；带上自己的模型，按需连接应用与远程电脑。',
+    tags: ['桌面 Agent', '多 Bot', 'Pi RPC', '本地资料', 'Computer Use'],
+    links: [
+      { label: '下载 macOS 版本', href: 'https://github.com/hifizz/morilo/releases/latest' },
+      { label: 'GitHub', href: 'https://github.com/hifizz/morilo' },
+    ],
+    poster: '/morilo-screenshot/morilo-chat.webp',
+    detail: {
+      problem: '当调研、写作和开发都发生在聊天里，把所有工作塞进同一条对话，很快就会找不到上下文。Morilo 尝试把 AI 做成一个可以每天打开的桌面工作空间：不同 Bot 承接不同主题，对话和本地资料可以继续积累；回复不必总是一整篇长文，而是像一起工作的人一样，分几句把事情说清楚。',
+      audience: '希望在 Mac 上长期使用多个 AI 助手，并自行选择模型服务、管理本地资料的个人开发者与知识工作者。',
+      features: [
+        '多个 Bot 与独立会话，分别保留不同工作的聊天记录，重启后继续对话。',
+        '流式 Markdown 与连续短消息气泡；用简短状态提示表达进度，不让原始工具日志占满聊天。',
+        '自带模型服务，配置协议、地址、模型与能力参数，验证连接成功后再保存。',
+        '本地资料分别保存会话与导入记忆，支持深浅主题、中英文界面和时区偏好。',
+        '按需通过 Composio 连接 GitHub 与 Vercel，使用已实现的只读工具查询信息。',
+        '可选连接自己的 Instabox 远程电脑，查看桌面，并主动切换到交互控制。',
+      ],
+      challenges: [
+        {
+          title: '把 Agent 的执行过程变成自然的交流',
+          description: '一次回答可能经历思考、调用工具和多段输出。难点不只是把文本流出来，而是让用户知道它仍在工作，同时不被参数、日志和原始推理打断。将进度提示与聊天正文分开，再按消息段落实时切分气泡，让执行反馈和阅读节奏各自清晰。',
+        },
+        {
+          title: '让多个会话持续存在，又互不串线',
+          description: '不同 Bot 的上下文、资料切换与应用重启需要保持一致。每个会话绑定独立的 Pi RPC 子进程与会话标识，本地资料进一步隔离聊天状态和会话目录；停止生成与清空会话分别对应中止请求和结束进程，避免只清掉界面却留下旧上下文。',
+        },
+        {
+          title: '把连接能力与授权边界一起交给用户',
+          description: '桌面助手一旦能调用应用或操作电脑，就不能默认拥有所有权限。新安装从纯聊天开始，本机工具需要明确启用；模型配置先验证再替换，凭据交给系统存储。远程电脑的创建还需要处理费用确认、请求超时与重启恢复，不能把一次超时变成重复创建。',
+        },
+      ],
+      engineering: [
+        {
+          title: 'Go 宿主与 Pi RPC 会话',
+          description: '使用 MyGo 承载 React 界面，通过生成的类型化绑定连接 Go 服务。将 Pi 的消息、文本增量和工具执行事件转换为 ChatEvent 流，按会话管理子进程、中止和重置，并恢复已保存的会话上下文。',
+        },
+        {
+          title: '本地状态与资料隔离',
+          description: '聊天状态防抖落盘，设置采用原子写入；不同本地资料分别保存会话与导入记忆。每次请求带入所选时区与当前时间，记忆导入限制文件类型和大小，不把本地保存等同于离线模型执行。',
+        },
+        {
+          title: '用户模型配置与凭据管理',
+          description: '通过独立临时 Pi 进程验证模型连接，失败时保留原配置。模型密钥保存在系统凭据存储中，只注入对应子进程；受管理的 Pi 文件仅保存非敏感配置，不复用或修改用户全局 Pi 配置。',
+        },
+        {
+          title: '受控工具桥与远程创建恢复',
+          description: '通过仅监听回环地址、带随机 Bearer token 的工具桥连接 Pi 与 Go，Instabox 密钥不传给 Pi。创建机器前持久化幂等键，超时或重启后跟踪同一请求；停止跟踪不会删除机器或停止计费。应用集成限定为已实现的 GitHub / Vercel 只读工具白名单。',
+        },
+        {
+          title: '独立安装包与离线验证',
+          description: '固定 Node 与 Pi 版本，校验 Node 归档并把运行时随应用打包，用户无需另外安装开发工具。用本机 HTTP fixture 验证模型连接、工具桥与远程接口契约；GitHub Actions 生成 Apple Silicon 和 Intel 安装包，未提供 Apple 签名与公证凭据时明确标为 unsigned。',
+        },
+      ],
+      stack: ['Go', 'MyGo', 'React', 'TypeScript', 'Vite', 'Pi RPC', 'Tailwind CSS', 'Composio', 'Instabox'],
+      note: '当前验证平台为 macOS，项目仍在早期迭代。截图由实际前端界面生成，使用示例对话，不代表真实模型执行记录。真实聊天需要自行配置模型服务；模型与可选服务可能产生费用。当前发布包标为 unsigned，未经过 Apple 公证；本机工具不构成沙箱，自动更新与定时任务尚未实现。',
+      screenshots: [
+        { src: '/morilo-screenshot/morilo-settings.webp', caption: '本地资料与外观设置：主题、强调色和语言由用户选择（界面演示）' },
+      ],
+    },
+  },
+  {
     slug: 'chatkeep',
     name: 'chatkeep',
     kind: 'product',
