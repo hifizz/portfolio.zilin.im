@@ -31,6 +31,17 @@ try {
       assert.ok((await readFile(download)).equals(buffer), `${filename(src)} CDN integrity`)
     }
   }
+  const morilo = projects.find((item) => item.slug === 'morilo')
+  assert.equal(morilo.kind, 'product')
+  assert.equal(morilo.links[0].href, 'https://github.com/hifizz/morilo/releases/latest')
+  assert.ok(morilo.detail.note.includes('示例对话'))
+  const moriloAssets = [morilo.poster, ...morilo.detail.screenshots.map(({ src }) => src)]
+  assert.deepEqual(moriloAssets, ['/morilo-screenshot/morilo-chat.webp', '/morilo-screenshot/morilo-settings.webp'])
+  for (const src of moriloAssets) {
+    const buffer = await readFile(`${root}public${src}`)
+    assert.equal(buffer.toString('ascii', 0, 4), 'RIFF')
+    assert.equal(buffer.toString('ascii', 8, 12), 'WEBP')
+  }
   const render = (data) => renderToStaticMarkup(createElement(ProjectMedia, { project: data }))
   const initial = render(project)
   assert.ok(initial.includes('<video'), 'Video must be the first slide')
